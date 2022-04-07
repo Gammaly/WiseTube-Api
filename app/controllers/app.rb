@@ -48,7 +48,7 @@ module WiseTube
 
               if new_link.save
                 response.status = 201
-                { message: 'Link saved', id: new_doc.id }.to_json
+                { message: 'Link saved', id: new_link.id }.to_json
               else
                 routing.halt 400, { message: 'Could not save link' }.to_json
               end
