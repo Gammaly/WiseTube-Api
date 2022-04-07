@@ -21,4 +21,3 @@ gem 'rerun'
 
 # Quality
 gem 'rubocop'
-
