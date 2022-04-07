@@ -20,7 +20,7 @@ module WiseTube
 
     attr_reader :id, :title, :description, :url, :image
 
-    def to_json(options = {})
+    def to_json(options = {}) # rubocop:disable Metrics/MethodLength
       JSON(
         {
           type: 'link',
