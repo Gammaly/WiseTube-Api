@@ -1,0 +1,5 @@
+---
+- name: Test Playlist
+  playlist_url: 'https://www.youtube.com/playlist?list=PLADsQ5aecQedTX6h-NqFDMjaLtNopVYv_' 
+- name: Another Playlist
+  playlist_url: 'https://www.youtube.com/playlist?list=PLqlDJioeqUdZz1vE-kBPBnWm0FDkNi2sU'

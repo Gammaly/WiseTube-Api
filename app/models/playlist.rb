@@ -4,9 +4,10 @@ require 'json'
 require 'sequel'
 
 module WiseTube
-  # Holds a full secret link
-  class Link < Sequel::Model
-    many_to_one :playlist
+  # Models a playlist
+  class Playlist < Sequel::Model
+    one_to_many :links
+    plugin :association_dependencies, links: :destroy
 
     plugin :timestamps
 
@@ -15,17 +16,12 @@ module WiseTube
       JSON(
         {
           data: {
-            type: 'link',
+            type: 'playlist',
             attributes: {
               id:,
-              title:,
-              description:,
-              url:,
-              image:
+              name:,
+              playlist_url:
             }
-          },
-          included: {
-            playlist:
           }
         }, options
       )
