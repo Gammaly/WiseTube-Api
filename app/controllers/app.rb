@@ -23,7 +23,7 @@ module WiseTube
 
           routing.on String do |playlist_id|
             routing.on 'links' do
-              @link_route = "#{api_root}/playlists/#{playlist_id}/links"
+              @link_route = "#{@api_root}/playlists/#{playlist_id}/links"
               # GET api/v1/playlists/[playlist_id]/links/[link_id]
               routing.get String do |link_id|
                 link = Link.where(playlist_id: playlist_id, id: link_id).first
