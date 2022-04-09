@@ -6,7 +6,6 @@ require 'sequel'
 module WiseTube
   # Holds a full secret link
   class Link < Sequel::Model
-
     many_to_one :playlist
 
     plugin :timestamps

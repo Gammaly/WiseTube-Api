@@ -8,7 +8,7 @@ module WiseTube
   class Api < Roda
     plugin :halt
 
-    route do |routing| 
+    route do |routing|
       response['Content-Type'] = 'application/json'
 
       routing.root do
@@ -19,14 +19,14 @@ module WiseTube
       @api_root = 'api/v1'
       routing.on @api_root do
         routing.on 'playlists' do
-          @playlist_route = "#{@api_root}/playlists" 
+          @playlist_route = "#{@api_root}/playlists"
 
           routing.on String do |playlist_id|
             routing.on 'links' do
               @link_route = "#{@api_root}/playlists/#{playlist_id}/links"
               # GET api/v1/playlists/[playlist_id]/links/[link_id]
               routing.get String do |link_id|
-                link = Link.where(playlist_id: playlist_id, id: link_id).first
+                link = Link.where(playlist_id:, id: link_id).first
                 link ? link.to_json : raise('Link not found')
               rescue StandardError => e
                 routing.halt 404, { message: e.message }.to_json
@@ -58,7 +58,7 @@ module WiseTube
                 routing.halt 500, { message: 'Database error' }.to_json
               end
             end
-          
+
             # GET api/v1/playlists/[ID]
             routing.get do
               playlist = Playlist.first(id: playlist_id)
