@@ -61,8 +61,8 @@ module WiseTube
           
             # GET api/v1/playlists/[ID]
             routing.get do
-              playlist = Playlists.first(id: playlist_id)
-              playlist ? playlist.to_json : raise('Playlists not found')
+              playlist = Playlist.first(id: playlist_id)
+              playlist ? playlist.to_json : raise('Playlist not found')
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
             end
@@ -70,7 +70,7 @@ module WiseTube
 
           # GET api/v1/playlists
           routing.get do
-            output = { data: Playlists.all }
+            output = { data: Playlist.all }
             JSON.pretty_generate(output)
           rescue StandardError
             routing.halt 404, { message: 'Could not find playlists' }.to_json
@@ -79,12 +79,12 @@ module WiseTube
           # POST api/v1/playlists
           routing.post do
             new_data = JSON.parse(routing.body.read)
-            new_playlist = Playlists.new(new_data)
+            new_playlist = Playlist.new(new_data)
             raise('Could not save playlist') unless new_playlist.save
 
             response.status = 201
             response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
-            { message: 'Playlists saved', data: new_playlist }.to_json
+            { message: 'Playlist saved', data: new_playlist }.to_json
           rescue StandardError => e
             routing.halt 400, { message: e.message }.to_json
           end
