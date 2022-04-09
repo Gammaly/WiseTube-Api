@@ -3,19 +3,12 @@
 require 'roda'
 require 'json'
 
-require_relative '../models/link'
-
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
-    plugin :environments
     plugin :halt
 
-    configure do
-      Link.setup
-    end
-
-    route do |routing| # rubocop:disable Metrics/BlockLength
+    route do |routing| 
       response['Content-Type'] = 'application/json'
 
       routing.root do
@@ -23,36 +16,77 @@ module WiseTube
         { message: 'WiseTubeAPI up at /api/v1' }.to_json
       end
 
-      routing.on 'api' do
-        routing.on 'v1' do
-          routing.on 'links' do
-            # GET api/v1/links/[id]
-            routing.get String do |id|
-              response.status = 200
-              Link.find(id).to_json
-            rescue StandardError
-              routing.halt 404, { message: 'Link not found' }.to_json
-            end
+      @api_root = 'api/v1'
+      routing.on @api_root do
+        routing.on 'playlists' do
+          @playlist_route = "#{@api_root}/playlists" 
 
-            # GET api/v1/links
-            routing.get do
-              response.status = 200
-              output = { link_ids: Link.all }
-              JSON.pretty_generate(output)
-            end
+          routing.on String do |playlist_id|
+            routing.on 'links' do
+              @link_route = "#{api_root}/playlists/#{playlist_id}/links"
+              # GET api/v1/playlists/[playlist_id]/links/[link_id]
+              routing.get String do |link_id|
+                link = Link.where(playlist_id: playlist_id, id: link_id).first
+                link ? link.to_json : raise('Link not found')
+              rescue StandardError => e
+                routing.halt 404, { message: e.message }.to_json
+              end
 
-            # POST api/v1/links
-            routing.post do
-              new_data = JSON.parse(routing.body.read)
-              new_link = Link.new(new_data)
+              # GET api/v1/playlists/[playlists_id]/links
+              routing.get do
+                output = { data: Playlist.first(id: playlist_id).links }
+                JSON.pretty_generate(output)
+              rescue StandardError
+                routing.halt 404, message: 'Could not find links'
+              end
 
-              if new_link.save
-                response.status = 201
-                { message: 'Link saved', id: new_link.id }.to_json
-              else
-                routing.halt 400, { message: 'Could not save link' }.to_json
+              # POST api/v1/playlists/[ID]/links
+              routing.post do
+                new_data = JSON.parse(routing.body.read)
+                playlist = Playlist.first(id: playlist_id)
+                new_link = playlist.add_link(new_data)
+
+                if new_link
+                  response.status = 201
+                  response['Location'] = "#{@link_route}/#{new_link.id}"
+                  { message: 'Link saved', data: new_link }.to_json
+                else
+                  routing.halt 400, 'Could not save link'
+                end
+
+              rescue StandardError
+                routing.halt 500, { message: 'Database error' }.to_json
               end
             end
+          
+            # GET api/v1/playlists/[ID]
+            routing.get do
+              playlist = Playlists.first(id: playlist_id)
+              playlist ? playlist.to_json : raise('Playlists not found')
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
+          end
+
+          # GET api/v1/playlists
+          routing.get do
+            output = { data: Playlists.all }
+            JSON.pretty_generate(output)
+          rescue StandardError
+            routing.halt 404, { message: 'Could not find playlists' }.to_json
+          end
+
+          # POST api/v1/playlists
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_playlist = Playlists.new(new_data)
+            raise('Could not save playlist') unless new_playlist.save
+
+            response.status = 201
+            response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
+            { message: 'Playlists saved', data: new_playlist }.to_json
+          rescue StandardError => e
+            routing.halt 400, { message: e.message }.to_json
           end
         end
       end
