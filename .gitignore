@@ -1,3 +1,9 @@
+_*
+.bundle
+.irb_history
+app/db/store/*.db
+config/secrets.yml
+
 *.gem
 *.rbc
 /.config
