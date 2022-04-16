@@ -3,7 +3,6 @@
 require 'rake/testtask'
 require './require_app'
 
-# rubocop:disable Style/HashSyntax, Style/SymbolArray
 task :default => :spec
 
 desc 'Tests API specs only'
@@ -85,4 +84,3 @@ namespace :newkey do
     puts "DB_KEY: #{SecureDB.generate_key}"
   end
 end
-# rubocop:enable Style/HashSyntax, Style/SymbolArray

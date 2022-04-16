@@ -56,7 +56,7 @@ describe 'Test Link Handling' do
     it 'HAPPY: should be able to create new links' do
       req_header = { 'CONTENT_TYPE' => 'application/json' }
       post "api/v1/playlists/#{@playlist.id}/links",
-          @link_data.to_json, req_header
+           @link_data.to_json, req_header
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
 

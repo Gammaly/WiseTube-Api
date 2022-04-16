@@ -89,7 +89,7 @@ module WiseTube
             routing.halt 400, { message: 'Illegal Attributes' }.to_json
           rescue StandardError => e
             Api.logger.error "UNKOWN ERROR: #{e.message}"
-            routing.halt 500, { message: "Unknown server error" }.to_json
+            routing.halt 500, { message: 'Unknown server error' }.to_json
           end
         end
       end
