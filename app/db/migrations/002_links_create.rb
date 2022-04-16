@@ -10,9 +10,9 @@ Sequel.migration do
 
       String :title, null: false
       # String :relative_path, null: false, default: ''
-      String :description
+      String :description_secure
       String :url, null: false, default: ''
-      String :image
+      String :image_secure
 
       DateTime :created_at
       DateTime :updated_at
