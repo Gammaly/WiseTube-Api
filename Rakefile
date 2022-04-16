@@ -12,7 +12,7 @@ end
 
 desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
+  t.pattern = 'spec/**/*_spec.rb'
   t.warning = false
 end
 
@@ -49,6 +49,10 @@ namespace :db do
     @app = WiseTube::Api
   end
 
+  task :load_models do
+    require_app('models')
+  end
+
   desc 'Run migrations'
   task :migrate => [:load, :print_env] do
     puts 'Migrating database to latest'
@@ -70,5 +74,13 @@ namespace :db do
     db_filename = "app/db/store/#{WiseTube::Api.environment}.db"
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
+  end
+end
+
+namespace :newkey do
+  desc 'Create sample cryptographic key for database'
+  task :db do
+    require_app('lib')
+    puts "DB_KEY: #{SecureDB.generate_key}"
   end
 end

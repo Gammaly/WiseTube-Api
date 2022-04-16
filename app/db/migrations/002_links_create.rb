@@ -5,14 +5,14 @@ require 'sequel'
 Sequel.migration do
   change do
     create_table(:links) do
-      primary_key :id
+      uuid :id, primary_key: true
       foreign_key :playlist_id, table: :playlists
 
       String :title, null: false
       # String :relative_path, null: false, default: ''
-      String :description
+      String :description_secure
       String :url, null: false, default: ''
-      String :image
+      String :image_secure
 
       DateTime :created_at
       DateTime :updated_at

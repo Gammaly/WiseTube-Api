@@ -40,26 +40,25 @@ module WiseTube
                 routing.halt 404, message: 'Could not find links'
               end
 
-              # POST api/v1/playlists/[ID]/links
+              # POST api/v1/playlists/[playlist_id]/links
               routing.post do
                 new_data = JSON.parse(routing.body.read)
                 playlist = Playlist.first(id: playlist_id)
                 new_link = playlist.add_link(new_data)
+                raise 'Could not save link' unless new_link
 
-                if new_link
-                  response.status = 201
-                  response['Location'] = "#{@link_route}/#{new_link.id}"
-                  { message: 'Link saved', data: new_link }.to_json
-                else
-                  routing.halt 400, 'Could not save link'
-                end
-
-              rescue StandardError
-                routing.halt 500, { message: 'Database error' }.to_json
+                response.status = 201
+                response['Location'] = "#{@link_route}/#{new_link.id}"
+                { message: 'Link saved', data: new_link }.to_json
+              rescue Sequel::MassAssignmentRestriction
+                Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+                routing.halt 400, { message: 'Illegal Attributes' }.to_json
+              rescue StandardError => e
+                routing.halt 500, { message: e.message }.to_json
               end
             end
 
-            # GET api/v1/playlists/[ID]
+            # GET api/v1/playlists/[playlist_id]
             routing.get do
               playlist = Playlist.first(id: playlist_id)
               playlist ? playlist.to_json : raise('Playlist not found')
@@ -85,8 +84,12 @@ module WiseTube
             response.status = 201
             response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
             { message: 'Playlist saved', data: new_playlist }.to_json
+          rescue Sequel::MassAssignmentRestriction
+            Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+            routing.halt 400, { message: 'Illegal Attributes' }.to_json
           rescue StandardError => e
-            routing.halt 400, { message: e.message }.to_json
+            Api.logger.error "UNKOWN ERROR: #{e.message}"
+            routing.halt 500, { message: 'Unknown server error' }.to_json
           end
         end
       end
