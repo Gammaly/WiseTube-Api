@@ -5,7 +5,7 @@ require 'sequel'
 Sequel.migration do
   change do
     create_table(:links) do
-      primary_key :id
+      uuid :id, primary_key: true
       foreign_key :playlist_id, table: :playlists
 
       String :title, null: false
