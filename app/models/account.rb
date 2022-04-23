@@ -37,9 +37,9 @@ module WiseTube
       JSON(
         {
           type: 'account',
-          id: id,
-          username: username,
-          email: email
+          id:,
+          username:,
+          email:
         }, options
       )
     end

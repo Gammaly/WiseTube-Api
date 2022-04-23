@@ -30,7 +30,7 @@ def create_owned_playlists
     owner['playlist_name'].each do |playlist_name|
       playlist_data = PLAYLIST_INFO.find { |playlist| playlist['name'] == playlist_name }
       WiseTube::CreatePlaylistForOwner.call(
-        owner_id: account.id, playlist_data: playlist_data
+        owner_id: account.id, playlist_data:
       )
     end
   end

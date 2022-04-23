@@ -5,7 +5,7 @@ module WiseTube
   class CreateLinkForPlaylist
     def self.call(playlist_id:, link_data:)
       Playlist.first(id: playlist_id)
-             .add_link(link_data)
+              .add_link(link_data)
     end
   end
 end
