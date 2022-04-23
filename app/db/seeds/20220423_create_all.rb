@@ -42,7 +42,7 @@ def create_links
   loop do
     link_info = link_info_each.next
     playlist = playlists_cycle.next
-    WiseTube::CreateDocumentForPlaylist.call(
+    WiseTube::CreateLinkForPlaylist.call(
       playlist_id: playlist.id, link_data: link_info
     )
   end
