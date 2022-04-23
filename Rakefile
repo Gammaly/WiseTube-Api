@@ -42,7 +42,7 @@ end
 
 namespace :db do
   task :load do
-    require_app(nil) # loads config code files only
+    require_app(nil) # load nothing by default
     require 'sequel'
 
     Sequel.extension :migration
@@ -60,8 +60,8 @@ namespace :db do
   end
 
   desc 'Destroy data in database; maintain tables'
-  task :delete => :load do
-    WiseTube::Account.dataset.destroy
+  task :delete => :load_models do
+    WiseTube::Playlist.dataset.destroy
   end
 
   desc 'Delete dev or test database file'
@@ -74,13 +74,5 @@ namespace :db do
     db_filename = "app/db/store/#{WiseTube::Api.environment}.db"
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
-  end
-end
-
-namespace :newkey do
-  desc 'Create sample cryptographic key for database'
-  task :db do
-    require_app('lib')
-    puts "DB_KEY: #{SecureDB.generate_key}"
   end
 end

@@ -8,6 +8,7 @@ module WiseTube
   class Api < Roda
     plugin :halt
 
+    # rubocop:disable Metrics/BlockLength
     route do |routing|
       response['Content-Type'] = 'application/json'
 
@@ -18,6 +19,36 @@ module WiseTube
 
       @api_root = 'api/v1'
       routing.on @api_root do
+        routing.on 'accounts' do
+          @account_route = "#{@api_root}/accounts"
+
+          routing.on String do |username|
+            # GET api/v1/accounts/[username]
+            routing.get do
+              account = Account.first(username: username)
+              account ? account.to_json : raise('Account not found')
+            rescue StandardError
+              routing.halt 404, { message: error.message }.to_json
+            end
+          end
+
+          # POST api/v1/accounts
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_account = Account.new(new_data)
+            raise('Could not save account') unless new_account.save
+
+            response.status = 201
+            response['Location'] = "#{@account_route}/#{new_account.id}"
+            { message: 'Playlist saved', data: new_account }.to_json
+          rescue Sequel::MassAssignmentRestriction
+            routing.halt 400, { message: 'Illegal Request' }.to_json
+          rescue StandardError => e
+            puts e.inspect
+            routing.halt 500, { message: error.message }.to_json
+          end
+        end
+
         routing.on 'playlists' do
           @playlist_route = "#{@api_root}/playlists"
 
@@ -94,5 +125,6 @@ module WiseTube
         end
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end
