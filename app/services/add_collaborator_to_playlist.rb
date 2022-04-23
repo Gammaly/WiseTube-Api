@@ -11,7 +11,7 @@ module WiseTube
     def self.call(email:, playlist_id:)
       collaborator = Account.first(email:)
       playlist = Playlist.first(id: playlist_id)
-      raise(OwnerNotCollaboratorError) if playlist.owner.id == collaborator.id
+      raise(OwnerNotCollaboratorError) if playlist.owner_id == collaborator.id
 
       playlist.add_collaborator(collaborator)
     end
