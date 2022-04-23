@@ -6,8 +6,18 @@ require 'sequel'
 module WiseTube
   # Models a playlist
   class Playlist < Sequel::Model
+    many_to_one :owner, class: :'WiseTube::Account'
+
+    many_to_many :collaborators,
+                 class: :'WiseTube::Account',
+                 join_table: :accounts_playlists,
+                 left_key: :playlist_id, right_key: :collaborator_id
+
     one_to_many :links
-    plugin :association_dependencies, links: :destroy
+
+    plugin :association_dependencies,
+           links: :destroy,
+           collaborators: :nullify
 
     plugin :timestamps
     plugin :whitelist_security
