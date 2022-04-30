@@ -9,7 +9,8 @@ module WiseTube
     many_to_one :playlist
 
     plugin :uuid, field: :id
-    plugin :timestamps
+    plugin :timestamps, update_on_create: true
+
     plugin :whitelist_security
     set_allowed_columns :title, :description, :url, :image
 
@@ -34,15 +35,13 @@ module WiseTube
     def to_json(options = {})
       JSON(
         {
-          data: {
-            type: 'link',
-            attributes: {
-              id:,
-              title:,
-              description:,
-              url:,
-              image:
-            }
+          type: 'link',
+          attributes: {
+            id:,
+            title:,
+            description:,
+            url:,
+            image:
           },
           included: {
             playlist:
