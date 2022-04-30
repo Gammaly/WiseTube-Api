@@ -34,7 +34,7 @@ module WiseTube
             new_data = JSON.parse(routing.body.read)
             
             new_link = CreateLinkForPlaylist.call(
-              playlist_id: playlist_id, link_data: new_date
+              playlist_id: playlist_id, link_data: new_data
             )
 
             response.status = 201

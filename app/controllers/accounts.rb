@@ -6,7 +6,7 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
-    route('account') do |routing|
+    route('accounts') do |routing|
       @account_route = "#{@api_root}/accounts"
 
       routing.on String do |username|

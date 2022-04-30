@@ -14,7 +14,7 @@ module WiseTube
                  left_key: :collaborator_id, right_key: :playlist_id
 
     plugin :association_dependencies,
-           owned_projects: :destroy,
+           owned_playlists: :destroy,
            collaborations: :nullify
 
     plugin :whitelist_security

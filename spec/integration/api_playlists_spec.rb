@@ -9,7 +9,7 @@ describe 'Test Playlist Handling' do
     wipe_database
   end
 
-  describe 'Getting projects' do
+  describe 'Getting playlists' do
     it 'HAPPY: should be able to get list of all playlists' do
       WiseTube::Playlist.create(DATA[:playlists][0]).save
       WiseTube::Playlist.create(DATA[:playlists][1]).save

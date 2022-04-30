@@ -23,7 +23,7 @@ describe 'Test Link Handling' do
     _(last_response.status).must_equal 200
 
     result = JSON.parse(last_response.body)['data']
-    _(result.count).must_equal 4
+    _(result.count).must_equal 2
     result.each do |link|
       _(link['type']).must_equal 'link'
     end
