@@ -22,8 +22,11 @@ describe 'Test Link Handling' do
     get "api/v1/playlists/#{playlist.id}/links"
     _(last_response.status).must_equal 200
 
-    result = JSON.parse last_response.body
-    _(result['data'].count).must_equal 2
+    result = JSON.parse(last_response.body)['data']
+    _(result.count).must_equal 4
+    result.each do |link|
+      _(link['type']).must_equal 'link'
+    end
   end
 
   it 'HAPPY: should be able to get details of a single link' do
@@ -35,8 +38,8 @@ describe 'Test Link Handling' do
     _(last_response.status).must_equal 200
 
     result = JSON.parse last_response.body
-    _(result['data']['attributes']['id']).must_equal link.id
-    _(result['data']['attributes']['title']).must_equal link_data['title']
+    _(result['attributes']['id']).must_equal link.id
+    _(result['attributes']['title']).must_equal link_data['title']
   end
 
   it 'SAD: should return error if unknown link requested' do
@@ -60,7 +63,7 @@ describe 'Test Link Handling' do
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
 
-      created = JSON.parse(last_response.body)['data']['data']['attributes']
+      created = JSON.parse(last_response.body)['data']['attributes']
       link = WiseTube::Link.first
 
       _(created['id']).must_equal link.id
