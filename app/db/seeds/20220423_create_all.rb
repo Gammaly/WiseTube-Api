@@ -53,9 +53,7 @@ def add_collaborators
   contrib_info.each do |contrib|
     playlist = WiseTube::Playlist.first(name: contrib['playlist_name'])
     contrib['collaborator_email'].each do |email|
-      WiseTube::AddCollaboratorToPlaylist.call(
-        email:, playlist_id: playlist.id
-      )
+      WiseTube::AddCollaboratorToPlaylist.call(email:, playlist_id: playlist.id)
     end
   end
 end

@@ -23,21 +23,17 @@ module WiseTube
     plugin :whitelist_security
     set_allowed_columns :name, :playlist_url
 
-    # rubocop:disable Metrics/MethodLength
     def to_json(options = {})
       JSON(
         {
-          data: {
-            type: 'playlist',
-            attributes: {
-              id:,
-              name:,
-              playlist_url:
-            }
+          type: 'playlist',
+          attributes: {
+            id:,
+            name:,
+            playlist_url:
           }
         }, options
       )
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end
