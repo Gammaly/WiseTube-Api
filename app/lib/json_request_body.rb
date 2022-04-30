@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 # Parses Json with keys as symbols

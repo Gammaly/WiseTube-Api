@@ -38,7 +38,7 @@ task :release? => [:spec, :style, :audit] do
 end
 
 task :print_env do
-  puts "Environment: #{ENV['RACK_ENV'] || 'development'}"
+  puts "Environment: ENV.fetch('RACK_ENV') || 'development'}"
 end
 
 desc 'Run application console (pry)'
@@ -104,7 +104,7 @@ namespace :newkey do
     puts "DB_KEY: #{SecureDB.generate_key}"
   end
 end
-  
+
 namespace :run do
   # Run in development mode
   desc 'Run API in development mode'
