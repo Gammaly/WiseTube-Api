@@ -15,7 +15,7 @@ module WiseTube
           auth_account.to_json
         rescue UnauthorizedError => e
           puts [e.class, e.message].join ': '
-          Api.logger.error "Could not authenticate credentials"
+          Api.logger.error 'Could not authenticate credentials'
           routing.halt '403', { message: 'Invalid credentials' }.to_json
         end
       end
