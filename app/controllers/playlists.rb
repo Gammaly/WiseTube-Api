@@ -61,8 +61,8 @@ module WiseTube
       # GET api/v1/playlists/
       routing.get do
         account = Account.first(username: @auth_account['username'])
-        projects = account.projects
-        JSON.pretty_generate(data: projects)
+        playlists = account.playlists
+        JSON.pretty_generate(data: playlists)
       rescue StandardError
         routing.halt 403, { message: 'Could not find any playlists' }.to_json
       end

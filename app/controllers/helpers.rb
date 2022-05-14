@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Credence
+module WiseTube
   # Methods for controllers to mixin
   module SecureRequestHelpers
     def secure_request?(routing)

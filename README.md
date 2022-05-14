@@ -1,4 +1,4 @@
-# Credence API
+# WiseTube API
 
 API to store and retrieve confidential development files (configuration, credentials)
 
@@ -9,12 +9,12 @@ All routes return Json
 - GET  `/`: Root route shows if Web API is running
 - GET  `api/v1/accounts/[username]`: Get account details
 - POST `api/v1/accounts`: Create a new account
-- GET  `api/v1/projects/[proj_id]/documents/[doc_id]`: Get a document
-- GET  `api/v1/projects/[proj_id]/documents`: Get list of documents for project
-- POST `api/v1/projects/[proj_id]/documents`: Upload document for a project
-- GET  `api/v1/projects/[proj_]`: Get information about a project
-- GET  `api/v1/projects`: Get list of all projects
-- POST `api/v1/projects`: Create new project
+- GET  `api/v1/playlists/[playlist_id]/links/[link_id]`: Get a link
+- GET  `api/v1/playlists/[playlist_id]/links`: Get list of links for playlist
+- POST `api/v1/playlists/[playlist_id]/links`: Upload link for a playlist
+- GET  `api/v1/playlists/[playlist_]`: Get information about a playlist
+- GET  `api/v1/playlists`: Get list of all playlists
+- POST `api/v1/playlists`: Create new playlist
 
 ## Install
 
@@ -46,7 +46,7 @@ rake spec
 
 ## Develop/Debug
 
-Add fake data to the development database to work on this project:
+Add fake data to the development database to work on this playlist:
 
 ```shell
 rake db:seed
@@ -84,7 +84,7 @@ rake spec
 
 ## Develop/Debug
 
-Add fake data to the development database to work on this project:
+Add fake data to the development database to work on this playlist:
 
 ```shell
 rake db:seed

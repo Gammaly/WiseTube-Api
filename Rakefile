@@ -52,7 +52,7 @@ namespace :db do
     require 'sequel'
 
     Sequel.extension :migration
-    @app = Credence::Api
+    @app = WiseTube::Api
   end
 
   task :load_models => :load do
@@ -67,7 +67,7 @@ namespace :db do
 
   desc 'Destroy data in database; maintain tables'
   task :delete => :load do
-    Credence::Account.dataset.destroy
+    WiseTube::Account.dataset.destroy
   end
 
   desc 'Delete dev or test database file'
@@ -77,14 +77,14 @@ namespace :db do
       return
     end
 
-    db_filename = "app/db/store/#{Credence::Api.environment}.db"
+    db_filename = "app/db/store/#{WiseTube::Api.environment}.db"
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
   end
 
   task :reset_seeds => :load_models do
     @app.DB[:schema_seeds].delete if @app.DB.tables.include?(:schema_seeds)
-    Credence::Account.dataset.destroy
+    WiseTube::Account.dataset.destroy
   end
 
   desc 'Seeds the development database'
