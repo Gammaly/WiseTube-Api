@@ -13,8 +13,7 @@ module WiseTube
           reg_data = JsonRequestBody.parse_symbolize(request.body.read)
           VerifyRegistration.new(reg_data).call
 
-          response.status = 202
-          { message: 'Verification email sent' }.to_json
+          response.status = 202, { message: 'Verification email sent' }.to_json
         rescue VerifyRegistration::InvalidRegistration => e
           routing.halt 400, { message: e.message }.to_json
         rescue VerifyRegistration::EmailProviderError
