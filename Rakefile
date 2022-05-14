@@ -38,7 +38,7 @@ task :release? => [:spec, :style, :audit] do
 end
 
 task :print_env do
-  puts "Environment: #{ENV.fetch('RACK_ENV') || 'development'}"
+  puts "Environment: #{ENV.fetch('RACK_ENV', nil) || 'development'}"
 end
 
 desc 'Run application console (pry)'
@@ -52,7 +52,7 @@ namespace :db do
     require 'sequel'
 
     Sequel.extension :migration
-    @app = WiseTube::Api
+    @app = Credence::Api
   end
 
   task :load_models => :load do
@@ -67,7 +67,7 @@ namespace :db do
 
   desc 'Destroy data in database; maintain tables'
   task :delete => :load do
-    WiseTube::Account.dataset.destroy
+    Credence::Account.dataset.destroy
   end
 
   desc 'Delete dev or test database file'
@@ -77,14 +77,14 @@ namespace :db do
       return
     end
 
-    db_filename = "app/db/store/#{WiseTube::Api.environment}.db"
+    db_filename = "app/db/store/#{Credence::Api.environment}.db"
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
   end
 
   task :reset_seeds => :load_models do
     @app.DB[:schema_seeds].delete if @app.DB.tables.include?(:schema_seeds)
-    WiseTube::Account.dataset.destroy
+    Credence::Account.dataset.destroy
   end
 
   desc 'Seeds the development database'
@@ -104,6 +104,12 @@ namespace :newkey do
   task :db do
     require_app('lib')
     puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+
+  desc 'Create sample cryptographic key for tokens and messaging'
+  task :msg do
+    require_app('lib')
+    puts "MSG_KEY: #{AuthToken.generate_key}"
   end
 end
 

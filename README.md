@@ -1,15 +1,20 @@
-# WiseTube-Api
+# Credence API
 
-API to store and retrieve wisetube link entity.
+API to store and retrieve confidential development files (configuration, credentials)
 
 ## Routes
 
 All routes return Json
 
-- GET `/`: Root route shows if Web API is running
-- GET `api/v1/link/`: returns all link IDs
-- GET `api/v1/link/[ID]`: returns details about a single link with given ID
-- POST `api/v1/link/`: creates a new link
+- GET  `/`: Root route shows if Web API is running
+- GET  `api/v1/accounts/[username]`: Get account details
+- POST `api/v1/accounts`: Create a new account
+- GET  `api/v1/projects/[proj_id]/documents/[doc_id]`: Get a document
+- GET  `api/v1/projects/[proj_id]/documents`: Get list of documents for project
+- POST `api/v1/projects/[proj_id]/documents`: Upload document for a project
+- GET  `api/v1/projects/[proj_]`: Get information about a project
+- GET  `api/v1/projects`: Get list of all projects
+- POST `api/v1/projects`: Create new project
 
 ## Install
 
