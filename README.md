@@ -1,15 +1,20 @@
-# WiseTube-Api
+# WiseTube API
 
-API to store and retrieve wisetube link entity.
+API to store and retrieve confidential development files (configuration, credentials)
 
 ## Routes
 
 All routes return Json
 
-- GET `/`: Root route shows if Web API is running
-- GET `api/v1/link/`: returns all link IDs
-- GET `api/v1/link/[ID]`: returns details about a single link with given ID
-- POST `api/v1/link/`: creates a new link
+- GET  `/`: Root route shows if Web API is running
+- GET  `api/v1/accounts/[username]`: Get account details
+- POST `api/v1/accounts`: Create a new account
+- GET  `api/v1/playlists/[playlist_id]/links/[link_id]`: Get a link
+- GET  `api/v1/playlists/[playlist_id]/links`: Get list of links for playlist
+- POST `api/v1/playlists/[playlist_id]/links`: Upload link for a playlist
+- GET  `api/v1/playlists/[playlist_]`: Get information about a playlist
+- GET  `api/v1/playlists`: Get list of all playlists
+- POST `api/v1/playlists`: Create new playlist
 
 ## Install
 
@@ -41,7 +46,7 @@ rake spec
 
 ## Develop/Debug
 
-Add fake data to the development database to work on this project:
+Add fake data to the development database to work on this playlist:
 
 ```shell
 rake db:seed
@@ -79,7 +84,7 @@ rake spec
 
 ## Develop/Debug
 
-Add fake data to the development database to work on this project:
+Add fake data to the development database to work on this playlist:
 
 ```shell
 rake db:seed

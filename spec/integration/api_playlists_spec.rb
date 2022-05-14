@@ -10,15 +10,36 @@ describe 'Test Playlist Handling' do
   end
 
   describe 'Getting playlists' do
-    it 'HAPPY: should be able to get list of all playlists' do
-      WiseTube::Playlist.create(DATA[:playlists][0]).save
-      WiseTube::Playlist.create(DATA[:playlists][1]).save
+    describe 'Getting list of playlists' do
+      before do
+        @account_data = DATA[:accounts][0]
+        account = WiseTube::Account.create(@account_data)
+        account.add_owned_playlist(DATA[:playlists][0])
+        account.add_owned_playlist(DATA[:playlists][1])
+      end
 
-      get 'api/v1/playlists'
-      _(last_response.status).must_equal 200
+      it 'HAPPY: should get list for authorized account' do
+        auth = WiseTube::AuthenticateAccount.call(
+          username: @account_data['username'],
+          password: @account_data['password']
+        )
 
-      result = JSON.parse last_response.body
-      _(result['data'].count).must_equal 2
+        header 'AUTHORIZATION', "Bearer #{auth[:attributes][:auth_token]}"
+        get 'api/v1/playlists'
+        _(last_response.status).must_equal 200
+
+        result = JSON.parse last_response.body
+        _(result['data'].count).must_equal 2
+      end
+
+      it 'BAD: should not process for unauthorized account' do
+        header 'AUTHORIZATION', 'Bearer bad_token'
+        get 'api/v1/playlists'
+        _(last_response.status).must_equal 403
+
+        result = JSON.parse last_response.body
+        _(result['data']).must_be_nil
+      end
     end
 
     it 'HAPPY: should be able to get details of a single playlist' do
