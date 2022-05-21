@@ -13,7 +13,8 @@ module WiseTube
           reg_data = JsonRequestBody.parse_symbolize(request.body.read)
           VerifyRegistration.new(reg_data).call
 
-          response.status = 202, { message: 'Verification email sent' }.to_json
+          response.status = 202
+          { message: 'Verification email sent' }.to_json
         rescue VerifyRegistration::InvalidRegistration => e
           routing.halt 400, { message: e.message }.to_json
         rescue VerifyRegistration::EmailProviderError
@@ -29,7 +30,7 @@ module WiseTube
         routing.post do
           credentials = JsonRequestBody.parse_symbolize(request.body.read)
           auth_account = AuthenticateAccount.call(credentials)
-          auth_account.to_json
+          { data: auth_account }.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
           Api.logger.error 'Could not authenticate credentials'

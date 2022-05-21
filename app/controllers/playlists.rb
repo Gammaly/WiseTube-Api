@@ -1,89 +1,123 @@
 # frozen_string_literal: true
 
-require 'roda'
 require_relative './app'
 
+# rubocop:disable Metrics/BlockLength
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     # rubocop:disable Metrics/BlockLength
     route('playlists') do |routing|
-      @playlist_route = "#{@api_root}/playlists"
+      unauthorized_message = { message: 'Unauthorized Request' }.to_json
+      routing.halt(403, unauthorized_message) unless @auth_account
 
+      @proj_route = "#{@api_root}/projects"
       routing.on String do |playlist_id|
-        routing.on 'links' do
-          @link_route = "#{@api_root}/playlists/#{playlist_id}/links"
-          # GET api/v1/playlists/[playlist_id]/links/[link_id]
-          routing.get String do |link_id|
-            link = Link.where(playlist_id:, id: link_id).first
-            link ? link.to_json : raise('Link not found')
-          rescue StandardError => e
-            routing.halt 404, { message: e.message }.to_json
-          end
+        @req_project = Project.first(id: proj_id)
 
-          # GET api/v1/playlists/[playlists_id]/links
-          routing.get do
-            output = { data: Playlist.first(id: playlist_id).links }
-            JSON.pretty_generate(output)
-          rescue StandardError
-            routing.halt 404, message: 'Could not find links'
-          end
+        # GET api/v1/projects/[ID]
+        routing.get do
+          project = GetProjectQuery.call(
+            account: @auth_account, project: @req_project
+          )
 
+          { data: project }.to_json
+        rescue GetProjectQuery::ForbiddenError => e
+          routing.halt 403, { message: e.message }.to_json
+        rescue GetProjectQuery::NotFoundError => e
+          routing.halt 404, { message: e.message }.to_json
+        rescue StandardError => e
+          puts "FIND PROJECT ERROR: #{e.inspect}"
+          routing.halt 500, { message: 'API server error' }.to_json
+        end
+
+        routing.on('documents') do
           # POST api/v1/playlists/[playlist_id]/links
           routing.post do
-            new_data = JSON.parse(routing.body.read)
-
-            new_link = CreateLinkForPlaylist.call(
-              playlist_id:, link_data: new_data
+            new_document = CreateDocument.call(
+              account: @auth_account,
+              project: @req_project,
+              document_data: JSON.parse(routing.body.read)
             )
 
             response.status = 201
-            response['Location'] = "#{@link_route}/#{new_link.id}"
-            { message: 'Link saved', data: new_link }.to_json
-          rescue Sequel::MassAssignmentRestriction
-            Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
-            routing.halt 400, { message: 'Illegal Attributes' }.to_json
+            response['Location'] = "#{@doc_route}/#{new_document.id}"
+            { message: 'Document saved', data: new_document }.to_json
+          rescue CreateDocument::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue CreateDocument::IllegalRequestError => e
+            routing.halt 400, { message: e.message }.to_json
           rescue StandardError => e
-            Api.logger.warn "MASS-ASSIGNMENT: #{e.message}"
-            routing.halt 500, { message: 'Error creating link' }.to_json
+            Api.logger.warn "Could not create document: #{e.message}"
+            routing.halt 500, { message: 'API server error' }.to_json
           end
         end
 
-        # GET api/v1/playlists/[playlist_id]
-        routing.get do
-          playlist = Playlist.first(id: playlist_id)
-          playlist ? playlist.to_json : raise('Playlist not found')
-        rescue StandardError => e
-          routing.halt 404, { message: e.message }.to_json
+        routing.on('collaborators') do
+          # PUT api/v1/projects/[proj_id]/collaborators
+          routing.put do
+            req_data = JSON.parse(routing.body.read)
+
+            collaborator = AddCollaborator.call(
+              account: @auth_account,
+              project: @req_project,
+              collab_email: req_data['email']
+            )
+
+            { data: collaborator }.to_json
+          rescue AddCollaborator::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
+
+          # DELETE api/v1/projects/[proj_id]/collaborators
+          routing.delete do
+            req_data = JSON.parse(routing.body.read)
+            collaborator = RemoveCollaborator.call(
+              req_username: @auth_account.username,
+              collab_email: req_data['email'],
+              project_id: proj_id
+            )
+
+            { message: "#{collaborator.username} removed from projet",
+              data: collaborator }.to_json
+          rescue RemoveCollaborator::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
         end
       end
 
-      # GET api/v1/playlists/
-      routing.get do
-        account = Account.first(username: @auth_account['username'])
-        playlists = account.playlists
-        JSON.pretty_generate(data: playlists)
-      rescue StandardError
-        routing.halt 403, { message: 'Could not find any playlists' }.to_json
-      end
+      routing .is do
+        # GET api/v1/projects
+        routing.get do
+          projects = ProjectPolicy::AccountScope.new(@auth_account).viewable
 
-      # POST api/v1/playlists
-      routing.post do
-        new_data = JSON.parse(routing.body.read)
-        new_playlist = Playlist.new(new_data)
-        raise('Could not save playlist') unless new_playlist.save
+          JSON.pretty_generate(data: projects)
+        rescue StandardError
+          routing.halt 403, { message: 'Could not find any projects' }.to_json
+        end
 
-        response.status = 201
-        response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
-        { message: 'Playlist saved', data: new_playlist }.to_json
-      rescue Sequel::MassAssignmentRestriction
-        Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
-        routing.halt 400, { message: 'Illegal Attributes' }.to_json
-      rescue StandardError => e
-        Api.logger.error "UNKOWN ERROR: #{e.message}"
-        routing.halt 500, { message: 'Unknown server error' }.to_json
+        # POST api/v1/projects
+        routing.post do
+          new_data = JSON.parse(routing.body.read)
+          new_proj = @auth_account.add_owned_project(new_data)
+
+          response.status = 201
+          response['Location'] = "#{@proj_route}/#{new_proj.id}"
+          { message: 'Project saved', data: new_proj }.to_json
+        rescue Sequel::MassAssignmentRestriction
+          Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+          routing.halt 400, { message: 'Illegal Request' }.to_json
+        rescue StandardError
+          Api.logger.error "Unknown error: #{e.message}"
+          routing.halt 500, { message: 'API server error' }.to_json
+        end
       end
     end
     # rubocop:enable Metrics/BlockLength
   end
 end
+# rubocop:enable Metrics/BlockLength
