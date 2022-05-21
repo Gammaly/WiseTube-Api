@@ -101,8 +101,8 @@ describe 'Test Playlist Handling' do
       playlist = WiseTube::Playlist.first
 
       _(created['id']).must_equal playlist.id
-      _(created['name']).must_equal existing_playlist['name']
-      _(created['playlist_url']).must_equal existing_playlist['playlist_url']
+      _(created['name']).must_equal @playlist_data['name']
+      _(created['playlist_url']).must_equal @playlist_data['playlist_url']
     end
 
     it 'SAD: should not create new playlist without authorization' do
