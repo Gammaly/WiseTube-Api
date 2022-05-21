@@ -39,7 +39,7 @@ module WiseTube
         relationships: {
           owner:,
           collaborators:,
-          documents:
+          links:
         }
       )
     end

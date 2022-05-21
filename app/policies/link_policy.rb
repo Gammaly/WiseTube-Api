@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-# Policy to determine if account can view a project
-class DocumentPolicy
-  def initialize(account, document)
+# Policy to determine if account can view a playlist
+class LinkPolicy
+  def initialize(account, link)
     @account = account
-    @document = document
+    @link = link
   end
 
   def can_view?
-    account_owns_project? || account_collaborates_on_project?
+    account_owns_playlist? || account_collaborates_on_playlist?
   end
 
   def can_edit?
-    account_owns_project? || account_collaborates_on_project?
+    account_owns_playlist? || account_collaborates_on_playlist?
   end
 
   def can_delete?
-    account_owns_project? || account_collaborates_on_project?
+    account_owns_playlist? || account_collaborates_on_playlist?
   end
 
   def summary
@@ -29,11 +29,11 @@ class DocumentPolicy
 
   private
 
-  def account_owns_project?
-    @document.project.owner == @account
+  def account_owns_playlist?
+    @link.playlist.owner == @account
   end
 
-  def account_collaborates_on_project?
-    @document.project.collaborators.include?(@account)
+  def account_collaborates_on_playlist?
+    @link.playlist.collaborators.include?(@account)
   end
 end

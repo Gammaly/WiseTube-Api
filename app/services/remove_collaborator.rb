@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Credence
-  # Add a collaborator to another owner's existing project
+module WiseTube
+  # Add a collaborator to another owner's existing playlist
   class RemoveCollaborator
     # Error for owner cannot be collaborator
     class ForbiddenError < StandardError
@@ -10,15 +10,15 @@ module Credence
       end
     end
 
-    def self.call(req_username:, collab_email:, project_id:)
+    def self.call(req_username:, collab_email:, playlist_id:)
       account = Account.first(username: req_username)
-      project = Project.first(id: project_id)
+      playlist = Playlist.first(id: playlist_id)
       collaborator = Account.first(email: collab_email)
 
-      policy = CollaborationRequestPolicy.new(project, account, collaborator)
+      policy = CollaborationRequestPolicy.new(playlist, account, collaborator)
       raise ForbiddenError unless policy.can_remove?
 
-      project.remove_collaborator(collaborator)
+      playlist.remove_collaborator(collaborator)
       collaborator
     end
   end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Credence
-  # Add a collaborator to another owner's existing project
+module WiseTube
+  # Add a collaborator to another owner's existing playlist
   class GetAccountQuery
     # Error if requesting to see forbidden account
     class ForbiddenError < StandardError
       def message
-        'You are not allowed to access that project'
+        'You are not allowed to access that playlist'
       end
     end
 

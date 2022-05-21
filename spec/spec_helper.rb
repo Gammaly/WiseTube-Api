@@ -14,6 +14,15 @@ def wipe_database
   WiseTube::Account.map(&:destroy)
 end
 
+def auth_header(account_data)
+  auth = WiseTube::AuthenticateAccount.call(
+    username: account_data['username'],
+    password: account_data['password']
+  )
+
+  "Bearer #{auth[:attributes][:auth_token]}"
+end
+
 DATA = {
   accounts: YAML.load(File.read('app/db/seeds/accounts_seed.yml')),
   links: YAML.load(File.read('app/db/seeds/links_seed.yml')),

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module Credence
-  # Policy to determine if an account can view a particular project
+module WiseTube
+  # Policy to determine if an account can view a particular playlist
   class CollaborationRequestPolicy
-    def initialize(project, requestor_account, target_account)
-      @project = project
+    def initialize(playlist, requestor_account, target_account)
+      @playlist = playlist
       @requestor_account = requestor_account
       @target_account = target_account
-      @requestor = ProjectPolicy.new(requestor_account, project)
-      @target = ProjectPolicy.new(target_account, project)
+      @requestor = PlaylistPolicy.new(requestor_account, playlist)
+      @target = PlaylistPolicy.new(target_account, playlist)
     end
 
     def can_invite?
@@ -22,7 +22,7 @@ module Credence
     private
 
     def target_is_collaborator?
-      @project.collaborators.include?(@target_account)
+      @playlist.collaborators.include?(@target_account)
     end
   end
 end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module Credence
-  # Policy to determine if an account can view a particular project
-  class ProjectPolicy
-    def initialize(account, project)
+module WiseTube
+  # Policy to determine if an account can view a particular playlist
+  class PlaylistPolicy
+    def initialize(account, playlist)
       @account = account
-      @project = project
+      @playlist = playlist
     end
 
     def can_view?
@@ -25,11 +25,11 @@ module Credence
       account_is_collaborator?
     end
 
-    def can_add_documents?
+    def can_add_links?
       account_is_owner? || account_is_collaborator?
     end
 
-    def can_remove_documents?
+    def can_remove_links?
       account_is_owner? || account_is_collaborator?
     end
 
@@ -51,8 +51,8 @@ module Credence
         can_edit: can_edit?,
         can_delete: can_delete?,
         can_leave: can_leave?,
-        can_add_documents: can_add_documents?,
-        can_delete_documents: can_remove_documents?,
+        can_add_links: can_add_links?,
+        can_delete_links: can_remove_links?,
         can_add_collaborators: can_add_collaborators?,
         can_remove_collaborators: can_remove_collaborators?,
         can_collaborate: can_collaborate?
@@ -62,11 +62,11 @@ module Credence
     private
 
     def account_is_owner?
-      @project.owner == @account
+      @playlist.owner == @account
     end
 
     def account_is_collaborator?
-      @project.collaborators.include?(@account)
+      @playlist.collaborators.include?(@account)
     end
   end
 end

@@ -22,7 +22,7 @@ describe 'Test AddCollaborator service' do
   it 'HAPPY: should be able to add a collaborator to a playlist' do
     WiseTube::AddCollaborator.call(
       account: @owner,
-      project: @project,
+      playlist: @playlist,
       collab_email: @collaborator.email
     )
 
@@ -34,7 +34,7 @@ describe 'Test AddCollaborator service' do
     _(proc {
       WiseTube::AddCollaborator.call(
         account: @owner,
-        project: @project,
+        playlist: @playlist,
         collab_email: @owner.email
       )
     }).must_raise WiseTube::AddCollaborator::ForbiddenError

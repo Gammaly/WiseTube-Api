@@ -42,8 +42,8 @@ def create_links
   loop do
     link_info = link_info_each.next
     playlist = playlists_cycle.next
-    Credence::CreateDocument.call(
-      account: project.owner, project: project, document_data: doc_info
+    WiseTube::CreateLink.call(
+      account: playlist.owner, playlist: playlist, link_data: link_info
     )
   end
 end
@@ -53,9 +53,9 @@ def add_collaborators
   contrib_info.each do |contrib|
     playlist = WiseTube::Playlist.first(name: contrib['playlist_name'])
     contrib['collaborator_email'].each do |email|
-      account = proj.owner
-      Credence::AddCollaborator.call(
-        account: account, project: proj, collab_email: email)
+      account = playlist.owner
+      WiseTube::AddCollaborator.call(
+        account: account, playlist: playlist, collab_email: email)
     end
   end
 end

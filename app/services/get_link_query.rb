@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-module Credence
-  # Add a collaborator to another owner's existing project
-  class GetDocumentQuery
+module WiseTube
+  # Add a collaborator to another owner's existing playlist
+  class GetLinkQuery
     # Error for owner cannot be collaborator
     class ForbiddenError < StandardError
       def message
-        'You are not allowed to access that document'
+        'You are not allowed to access that link'
       end
     end
 
-    # Error for cannot find a project
+    # Error for cannot find a playlist
     class NotFoundError < StandardError
       def message
-        'We could not find that document'
+        'We could not find that link'
       end
     end
 
-    # Document for given requestor account
-    def self.call(requestor:, document:)
-      raise NotFoundError unless document
+    # Link for given requestor account
+    def self.call(requestor:, link:)
+      raise NotFoundError unless link
 
-      policy = DocumentPolicy.new(requestor, document)
+      policy = LinkPolicy.new(requestor, link)
       raise ForbiddenError unless policy.can_view?
 
-      document
+      link
     end
   end
 end

@@ -11,56 +11,56 @@ module WiseTube
       unauthorized_message = { message: 'Unauthorized Request' }.to_json
       routing.halt(403, unauthorized_message) unless @auth_account
 
-      @proj_route = "#{@api_root}/projects"
+      @playlist_route = "#{@api_root}/playlists"
       routing.on String do |playlist_id|
-        @req_project = Project.first(id: proj_id)
+        @req_playlist = Playlist.first(id: playlist_id)
 
-        # GET api/v1/projects/[ID]
+        # GET api/v1/playlists/[ID]
         routing.get do
-          project = GetProjectQuery.call(
-            account: @auth_account, project: @req_project
+          playlist = GetPlaylistQuery.call(
+            account: @auth_account, playlist: @req_playlist
           )
 
-          { data: project }.to_json
-        rescue GetProjectQuery::ForbiddenError => e
+          { data: playlist }.to_json
+        rescue GetPlaylistQuery::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
-        rescue GetProjectQuery::NotFoundError => e
+        rescue GetPlaylistQuery::NotFoundError => e
           routing.halt 404, { message: e.message }.to_json
         rescue StandardError => e
           puts "FIND PROJECT ERROR: #{e.inspect}"
           routing.halt 500, { message: 'API server error' }.to_json
         end
 
-        routing.on('documents') do
+        routing.on('links') do
           # POST api/v1/playlists/[playlist_id]/links
           routing.post do
-            new_document = CreateDocument.call(
+            new_link = CreateLink.call(
               account: @auth_account,
-              project: @req_project,
-              document_data: JSON.parse(routing.body.read)
+              playlist: @req_playlist,
+              link_data: JSON.parse(routing.body.read)
             )
 
             response.status = 201
-            response['Location'] = "#{@doc_route}/#{new_document.id}"
-            { message: 'Document saved', data: new_document }.to_json
-          rescue CreateDocument::ForbiddenError => e
+            response['Location'] = "#{@link_route}/#{new_link.id}"
+            { message: 'Link saved', data: new_link }.to_json
+          rescue CreateLink::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
-          rescue CreateDocument::IllegalRequestError => e
+          rescue CreateLink::IllegalRequestError => e
             routing.halt 400, { message: e.message }.to_json
           rescue StandardError => e
-            Api.logger.warn "Could not create document: #{e.message}"
+            Api.logger.warn "Could not create link: #{e.message}"
             routing.halt 500, { message: 'API server error' }.to_json
           end
         end
 
         routing.on('collaborators') do
-          # PUT api/v1/projects/[proj_id]/collaborators
+          # PUT api/v1/playlists/[playlist_id]/collaborators
           routing.put do
             req_data = JSON.parse(routing.body.read)
 
             collaborator = AddCollaborator.call(
               account: @auth_account,
-              project: @req_project,
+              playlist: @req_playlist,
               collab_email: req_data['email']
             )
 
@@ -71,16 +71,16 @@ module WiseTube
             routing.halt 500, { message: 'API server error' }.to_json
           end
 
-          # DELETE api/v1/projects/[proj_id]/collaborators
+          # DELETE api/v1/playlists/[playlist_id]/collaborators
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             collaborator = RemoveCollaborator.call(
               req_username: @auth_account.username,
               collab_email: req_data['email'],
-              project_id: proj_id
+              playlist_id: playlist_id
             )
 
-            { message: "#{collaborator.username} removed from projet",
+            { message: "#{collaborator.username} removed from playlistet",
               data: collaborator }.to_json
           rescue RemoveCollaborator::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
@@ -91,23 +91,23 @@ module WiseTube
       end
 
       routing .is do
-        # GET api/v1/projects
+        # GET api/v1/playlists
         routing.get do
-          projects = ProjectPolicy::AccountScope.new(@auth_account).viewable
+          playlists = PlaylistPolicy::AccountScope.new(@auth_account).viewable
 
-          JSON.pretty_generate(data: projects)
+          JSON.pretty_generate(data: playlists)
         rescue StandardError
-          routing.halt 403, { message: 'Could not find any projects' }.to_json
+          routing.halt 403, { message: 'Could not find any playlists' }.to_json
         end
 
-        # POST api/v1/projects
+        # POST api/v1/playlists
         routing.post do
           new_data = JSON.parse(routing.body.read)
-          new_proj = @auth_account.add_owned_project(new_data)
+          new_playlist = @auth_account.add_owned_playlist(new_data)
 
           response.status = 201
-          response['Location'] = "#{@proj_route}/#{new_proj.id}"
-          { message: 'Project saved', data: new_proj }.to_json
+          response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
+          { message: 'Playlist saved', data: new_playlist }.to_json
         rescue Sequel::MassAssignmentRestriction
           Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
           routing.halt 400, { message: 'Illegal Request' }.to_json
