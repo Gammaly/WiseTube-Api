@@ -2,7 +2,7 @@
 
 require_relative '../spec_helper'
 
-describe 'Test AddCollaboratorToPlaylist service' do
+describe 'Test AddCollaborator service' do
   before do
     wipe_database
 
@@ -20,9 +20,10 @@ describe 'Test AddCollaboratorToPlaylist service' do
   end
 
   it 'HAPPY: should be able to add a collaborator to a playlist' do
-    WiseTube::AddCollaboratorToPlaylist.call(
-      email: @collaborator.email,
-      playlist_id: @playlist.id
+    WiseTube::AddCollaborator.call(
+      account: @owner,
+      playlist: @playlist,
+      collab_email: @collaborator.email
     )
 
     _(@collaborator.playlists.count).must_equal 1
@@ -31,10 +32,11 @@ describe 'Test AddCollaboratorToPlaylist service' do
 
   it 'BAD: should not add owner as a collaborator' do
     _(proc {
-      WiseTube::AddCollaboratorToPlaylist.call(
-        email: @owner.email,
-        playlist_id: @playlist.id
+      WiseTube::AddCollaborator.call(
+        account: @owner,
+        playlist: @playlist,
+        collab_email: @owner.email
       )
-    }).must_raise WiseTube::AddCollaboratorToPlaylist::OwnerNotCollaboratorError
+    }).must_raise WiseTube::AddCollaborator::ForbiddenError
   end
 end

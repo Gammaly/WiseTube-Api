@@ -6,15 +6,22 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
+    # rubocop:disable Metrics/BlockLength
     route('accounts') do |routing|
       @account_route = "#{@api_root}/accounts"
 
       routing.on String do |username|
         # GET api/v1/accounts/[username]
         routing.get do
-          account = Account.first(username:)
-          account ? account.to_json : raise('Account not found')
+          account = GetAccountQuery.call(
+            requestor: @auth_account, username:
+          )
+          account.to_json
+        rescue GetAccountQuery::ForbiddenError => e
+          routing.halt 404, { message: e.message }.to_json
         rescue StandardError => e
+          puts "GET ACCOUNT ERROR: #{e.inspect}"
+          routing.halt 500, { message: 'API Server Error' }.to_json
           routing.halt 404, { message: e.message }.to_json
         end
       end
@@ -36,5 +43,6 @@ module WiseTube
         routing.halt 500, { message: e.message }.to_json
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end
