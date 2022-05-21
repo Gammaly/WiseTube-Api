@@ -23,17 +23,29 @@ module WiseTube
     plugin :whitelist_security
     set_allowed_columns :name, :playlist_url
 
-    def to_json(options = {})
-      JSON(
-        {
-          type: 'playlist',
+    def to_h
+      {
+        type: 'playlist',
           attributes: {
             id:,
             name:,
             playlist_url:
-          }
-        }, options
+        }
+      }
+    end
+
+    def full_details
+      to_h.merge(
+        relationships: {
+          owner:,
+          collaborators:,
+          documents:
+        }
       )
+    end
+
+    def to_json(options = {})
+      JSON(to_h, options)
     end
   end
 end
