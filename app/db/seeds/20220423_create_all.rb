@@ -43,7 +43,7 @@ def create_links
     link_info = link_info_each.next
     playlist = playlists_cycle.next
     WiseTube::CreateLink.call(
-      account: playlist.owner, playlist: playlist, link_data: link_info
+      account: playlist.owner, playlist:, link_data: link_info
     )
   end
 end
@@ -55,7 +55,8 @@ def add_collaborators
     contrib['collaborator_email'].each do |email|
       account = playlist.owner
       WiseTube::AddCollaborator.call(
-        account: account, playlist: playlist, collab_email: email)
+        account:, playlist:, collab_email: email
+      )
     end
   end
 end

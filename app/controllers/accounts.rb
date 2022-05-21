@@ -6,6 +6,7 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
+    # rubocop:disable Metrics/BlockLength
     route('accounts') do |routing|
       @account_route = "#{@api_root}/accounts"
 
@@ -13,7 +14,7 @@ module WiseTube
         # GET api/v1/accounts/[username]
         routing.get do
           account = GetAccountQuery.call(
-            requestor: @auth_account, username: username
+            requestor: @auth_account, username:
           )
           account.to_json
         rescue GetAccountQuery::ForbiddenError => e
@@ -42,5 +43,6 @@ module WiseTube
         routing.halt 500, { message: e.message }.to_json
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end

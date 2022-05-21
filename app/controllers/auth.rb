@@ -6,6 +6,7 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
+    # rubocop:disable Metrics/BlockLength
     route('auth') do |routing|
       routing.on 'register' do
         # POST api/v1/auth/register
@@ -38,5 +39,6 @@ module WiseTube
         end
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end

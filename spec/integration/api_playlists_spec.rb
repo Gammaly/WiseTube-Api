@@ -118,7 +118,7 @@ describe 'Test Playlist Handling' do
     it 'SECURITY: should not create playlist with mass assignment' do
       bad_data = @playlist_data.clone
       bad_data['created_at'] = '1900-01-01'
-      
+
       header 'AUTHORIZATION', auth_header(@account_data)
       post 'api/v1/playlists', bad_data.to_json
 

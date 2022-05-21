@@ -42,9 +42,10 @@ module WiseTube
     end
 
     def can_collaborate?
-      not (account_is_owner? or account_is_collaborator?)
+      !(account_is_owner? or account_is_collaborator?)
     end
 
+    # rubocop:disable Metrics/MethodLength
     def summary
       {
         can_view: can_view?,
@@ -58,6 +59,7 @@ module WiseTube
         can_collaborate: can_collaborate?
       }
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

@@ -26,10 +26,10 @@ module WiseTube
     def to_h
       {
         type: 'playlist',
-          attributes: {
-            id:,
-            name:,
-            playlist_url:
+        attributes: {
+          id:,
+          name:,
+          playlist_url:
         }
       }
     end

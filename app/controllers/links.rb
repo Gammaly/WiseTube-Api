@@ -6,9 +6,7 @@ module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     route('links') do |routing|
-      unless @auth_account
-        routing.halt 403, { message: 'Not authorized' }.to_json
-      end
+      routing.halt 403, { message: 'Not authorized' }.to_json unless @auth_account
 
       @link_route = "#{@api_root}/links"
 

@@ -6,7 +6,6 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
-    # rubocop:disable Metrics/BlockLength
     route('playlists') do |routing|
       unauthorized_message = { message: 'Unauthorized Request' }.to_json
       routing.halt(403, unauthorized_message) unless @auth_account
@@ -77,7 +76,7 @@ module WiseTube
             collaborator = RemoveCollaborator.call(
               req_username: @auth_account.username,
               collab_email: req_data['email'],
-              playlist_id: playlist_id
+              playlist_id:
             )
 
             { message: "#{collaborator.username} removed from playlistet",
@@ -90,7 +89,7 @@ module WiseTube
         end
       end
 
-      routing .is do
+      routing.is do
         # GET api/v1/playlists
         routing.get do
           playlists = PlaylistPolicy::AccountScope.new(@auth_account).viewable
@@ -117,7 +116,6 @@ module WiseTube
         end
       end
     end
-    # rubocop:enable Metrics/BlockLength
   end
 end
 # rubocop:enable Metrics/BlockLength
