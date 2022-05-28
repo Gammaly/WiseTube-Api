@@ -23,7 +23,7 @@ end
 
 def auth_header(account_data)
   auth = authenticate(account_data)
-  
+
   "Bearer #{auth[:attributes][:auth_token]}"
 end
 

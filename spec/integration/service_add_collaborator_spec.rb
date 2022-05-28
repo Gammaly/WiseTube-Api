@@ -12,16 +12,17 @@ describe 'Test AddCollaborator service' do
 
     playlist_data = DATA[:playlists].first
 
+    @owner_data = DATA[:accounts][0]
     @owner = WiseTube::Account.all[0]
     @collaborator = WiseTube::Account.all[1]
-    @playlist = WiseTube::CreatePlaylistForOwner.call(
-      owner_id: @owner.id, playlist_data:
-    )
+    @playlist = @owner.add_owned_playlist(playlist_data)
   end
 
   it 'HAPPY: should be able to add a collaborator to a playlist' do
+    auth = authorization(@owner_data)
+
     WiseTube::AddCollaborator.call(
-      account: @owner,
+      auth: auth,
       playlist: @playlist,
       collab_email: @collaborator.email
     )
@@ -31,9 +32,14 @@ describe 'Test AddCollaborator service' do
   end
 
   it 'BAD: should not add owner as a collaborator' do
+    auth = WiseTube::AuthenticateAccount.call(
+      username: @owner_data['username'],
+      password: @owner_data['password']
+    )
+
     _(proc {
       WiseTube::AddCollaborator.call(
-        account: @owner,
+        auth: auth,
         playlist: @playlist,
         collab_email: @owner.email
       )
