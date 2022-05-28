@@ -6,7 +6,7 @@ module WiseTube
     # Error for owner cannot be collaborator
     class ForbiddenError < StandardError
       def message
-        'You are not allowed to create projects'
+        'You are not allowed to create playlists'
       end
     end
 

@@ -2,7 +2,7 @@
 
 require 'http'
 
-module Credence
+module WiseTube
   # Find or create an SsoAccount based on Github code
   class AuthorizeSso
     def call(access_token)
@@ -14,7 +14,7 @@ module Credence
 
     def get_github_account(access_token)
       gh_response = HTTP.headers(
-        user_agent: 'Credence',
+        user_agent: 'WiseTube',
         authorization: "token #{access_token}",
         accept: 'application/json'
       ).get(ENV['GITHUB_ACCOUNT_URL'])
