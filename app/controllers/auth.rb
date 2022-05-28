@@ -6,8 +6,7 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
-    # rubocop:disable Metrics/BlockLength
-    route('auth') do |routing|
+    route('auth') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on 'register' do
         # POST api/v1/auth/register
         routing.post do
@@ -35,8 +34,20 @@ module WiseTube
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
           Api.logger.error 'Could not authenticate credentials'
-          routing.halt '403', { message: 'Invalid credentials' }.to_json
+          routing.halt '401', { message: 'Invalid credentials' }.to_json
         end
+      end
+
+      # POST /api/v1/auth/sso
+      routing.post 'sso' do
+        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
+
+        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        { data: auth_account }.to_json
+      rescue StandardError => error
+        puts "FAILED to validate Github account: #{error.inspect}"
+        puts error.backtrace
+        routing.halt 400
       end
     end
     # rubocop:enable Metrics/BlockLength
