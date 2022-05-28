@@ -6,14 +6,14 @@ module WiseTube
     # Error for owner cannot be collaborator
     class ForbiddenError < StandardError
       def message
-        'You are not allowed to add more documents'
+        'You are not allowed to add more links'
       end
     end
 
-    def self.call(auth:, project_data:)
-      raise ForbiddenError unless auth[:scope].can_write?('projects')
+    def self.call(auth:, playlist_data:)
+      raise ForbiddenError unless auth[:scope].can_write?('playlists')
 
-      auth[:account].add_owned_project(project_data)
+      auth[:account].add_owned_playlist(playlist_data)
     end
   end
 end

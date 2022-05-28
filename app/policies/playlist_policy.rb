@@ -65,11 +65,11 @@ module WiseTube
     private
 
     def can_read?
-      @auth_scope ? @auth_scope.can_read?('projects') : false
+      @auth_scope ? @auth_scope.can_read?('playlists') : false
     end
 
     def can_write?
-      @auth_scope ? @auth_scope.can_write?('projects') : false
+      @auth_scope ? @auth_scope.can_write?('playlists') : false
     end
 
     def account_is_owner?

@@ -13,7 +13,7 @@ module WiseTube
     def self.call(auth:, playlist:, collab_email:)
       invitee = Account.first(email: collab_email)
       policy = CollaborationRequestPolicy.new(
-        project, auth[:account], invitee, auth[:scope]
+        playlist, auth[:account], invitee, auth[:scope]
       )
       raise ForbiddenError unless policy.can_invite?
 

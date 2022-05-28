@@ -25,7 +25,7 @@ module WiseTube
     private
 
     def can_write?
-      @auth_scope ? @auth_scope.can_write?('projects') : false
+      @auth_scope ? @auth_scope.can_write?('playlists') : false
     end
 
     def target_is_collaborator?

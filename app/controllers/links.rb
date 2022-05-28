@@ -16,7 +16,7 @@ module WiseTube
 
         routing.get do
           link = GetLinkQuery.call(
-            auth: @auth, document: @req_document
+            auth: @auth, link: @req_link
           )
 
           { data: link }.to_json

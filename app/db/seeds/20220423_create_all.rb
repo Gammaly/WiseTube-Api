@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require './app/controllers/helpers'
-include Credence::SecureRequestHelpers
+include WiseΤube::SecureRequestHelpers
 
 Sequel.seed(:development) do
   def run
@@ -32,7 +32,7 @@ def create_owned_playlists
     account = WiseTube::Account.first(username: owner['username'])
     owner['playlist_name'].each do |playlist_name|
       playlist_data = PLAYLIST_INFO.find { |playlist| playlist['name'] == playlist_name }
-      account.add_owned_project(proj_data)
+      account.add_owned_playlist(playlist_data)
     end
   end
 end
@@ -44,7 +44,7 @@ def create_links
     link_info = link_info_each.next
     playlist = playlists_cycle.next
 
-    auth_token = AuthToken.create(project.owner)
+    auth_token = AuthToken.create(playlist.owner)
     auth = scoped_auth(auth_token)
 
     WiseTube::CreateLink.call(
@@ -56,14 +56,14 @@ end
 def add_collaborators
   contrib_info = CONTRIB_INFO
   contrib_info.each do |contrib|
-    project = Credence::Project.first(name: contrib['proj_name'])
+    playlist = WiseΤube::Playlist.first(name: contrib['playlist_name'])
 
-    auth_token = AuthToken.create(project.owner)
+    auth_token = AuthToken.create(playlist.owner)
     auth = scoped_auth(auth_token)
 
     contrib['collaborator_email'].each do |email|
       WiseTube::AddCollaborator.call(
-        auth: auth, project: project, collab_email: email
+        auth: auth, playlist: playlist, collab_email: email
       )
     end
   end

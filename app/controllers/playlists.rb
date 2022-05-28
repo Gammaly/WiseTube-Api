@@ -15,7 +15,7 @@ module WiseTube
 
         # GET api/v1/playlists/[ID]
         routing.get do
-          project = GetProjectQuery.call(auth: @auth, project: @req_project)
+          playlist = GetPlaylistQuery.call(auth: @auth, playlist: @req_playlist)
 
           { data: playlist }.to_json
         rescue GetPlaylistQuery::ForbiddenError => e
@@ -100,8 +100,8 @@ module WiseTube
         routing.post do
           new_data = JSON.parse(routing.body.read)
           
-          new_proj = CreateProjectForOwner.call(
-            auth: @auth, project_data: new_data
+          new_playlist = CreatePlaylistForOwner.call(
+            auth: @auth, playlist_data: new_data
           )
 
           response.status = 201
@@ -110,7 +110,7 @@ module WiseTube
         rescue Sequel::MassAssignmentRestriction
           Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
           routing.halt 400, { message: 'Illegal Request' }.to_json
-        rescue CreateProjectForOwner::ForbiddenError => e
+        rescue CreatePlaylistForOwner::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
         rescue StandardError
           Api.logger.error "Unknown error: #{e.message}"

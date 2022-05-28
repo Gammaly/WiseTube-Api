@@ -31,11 +31,11 @@ class LinkPolicy
   private
 
   def can_read?
-    @auth_scope ? @auth_scope.can_read?('documents') : false
+    @auth_scope ? @auth_scope.can_read?('links') : false
   end
 
   def can_write?
-    @auth_scope ? @auth_scope.can_write?('documents') : false
+    @auth_scope ? @auth_scope.can_write?('links') : false
   end
 
   def account_owns_playlist?

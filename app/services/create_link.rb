@@ -18,7 +18,7 @@ module WiseTube
     end
 
     def self.call(auth:, playlist:, link_data:)
-      policy = PlaylistPolicy.new(auth[:account], project, auth[:scope])
+      policy = PlaylistPolicy.new(auth[:account], playlist, auth[:scope])
       raise ForbiddenError unless policy.can_add_links?
 
       playlist.add_link(link_data)

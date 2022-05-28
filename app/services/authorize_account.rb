@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Credence
+module WiseΤube
   # Authorize an account
   class AuthorizeAccount
     # Error if requesting to see forbidden account
