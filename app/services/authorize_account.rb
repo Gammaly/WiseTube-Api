@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WiseΤube
+module WiseTube
   # Authorize an account
   class AuthorizeAccount
     # Error if requesting to see forbidden account

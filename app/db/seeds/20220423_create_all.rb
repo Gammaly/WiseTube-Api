@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require './app/controllers/helpers'
-include WiseΤube::SecureRequestHelpers
+require './app/controllers/helpers.rb'
+include WiseTube::SecureRequestHelpers
 
 Sequel.seed(:development) do
   def run
@@ -56,7 +56,7 @@ end
 def add_collaborators
   contrib_info = CONTRIB_INFO
   contrib_info.each do |contrib|
-    playlist = WiseΤube::Playlist.first(name: contrib['playlist_name'])
+    playlist = WiseTube::Playlist.first(name: contrib['playlist_name'])
 
     auth_token = AuthToken.create(playlist.owner)
     auth = scoped_auth(auth_token)
