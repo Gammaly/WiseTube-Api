@@ -6,12 +6,11 @@ require_relative './app'
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
-    # rubocop:disable Metrics/BlockLength
-    route('accounts') do |routing|
+    route('accounts') do |routing| # rubocop:disable Metrics/BlockLength
       @account_route = "#{@api_root}/accounts"
-
       routing.on String do |username|
         routing.halt(403, UNAUTH_MSG) unless @auth_account
+
         # GET api/v1/accounts/[username]
         routing.get do
           auth = AuthorizeAccount.call(
@@ -24,7 +23,6 @@ module WiseTube
         rescue StandardError => e
           puts "GET ACCOUNT ERROR: #{e.inspect}"
           routing.halt 500, { message: 'API Server Error' }.to_json
-          routing.halt 404, { message: e.message }.to_json
         end
       end
 
@@ -35,7 +33,7 @@ module WiseTube
         raise('Could not save account') unless new_account.save
 
         response.status = 201
-        response['Location'] = "#{@account_route}/#{new_account.id}"
+        response['Location'] = "#{@account_route}/#{new_account.username}"
         { message: 'Account created', data: new_account }.to_json
       rescue Sequel::MassAssignmentRestriction
         Api.logger.warn "MASS-ASSIGNMENT:: #{new_data.keys}"
@@ -45,6 +43,5 @@ module WiseTube
         routing.halt 500, { message: e.message }.to_json
       end
     end
-    # rubocop:enable Metrics/BlockLength
   end
 end

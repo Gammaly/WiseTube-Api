@@ -10,9 +10,11 @@ module WiseTube
       end
     end
 
-    def self.call(account:, playlist:, collab_email:)
+    def self.call(auth:, playlist:, collab_email:)
       invitee = Account.first(email: collab_email)
-      policy = CollaborationRequestPolicy.new(playlist, account, invitee)
+      policy = CollaborationRequestPolicy.new(
+        project, auth[:account], invitee, auth[:scope]
+      )
       raise ForbiddenError unless policy.can_invite?
 
       playlist.add_collaborator(invitee)

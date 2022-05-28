@@ -3,22 +3,23 @@
 module WiseTube
   # Policy to determine if an account can view a particular playlist
   class PlaylistPolicy
-    def initialize(account, playlist)
+    def initialize(account, playlist, auth_scope = nil)
       @account = account
       @playlist = playlist
+      @auth_scope = auth_scope
     end
 
     def can_view?
-      account_is_owner? || account_is_collaborator?
+      can_read? && (account_is_owner? || account_is_collaborator?)
     end
 
     # duplication is ok!
     def can_edit?
-      account_is_owner? || account_is_collaborator?
+      can_read? && (account_is_owner? || account_is_collaborator?)
     end
 
     def can_delete?
-      account_is_owner?
+      can_read? && account_is_owner?
     end
 
     def can_leave?
@@ -26,19 +27,19 @@ module WiseTube
     end
 
     def can_add_links?
-      account_is_owner? || account_is_collaborator?
+      can_read? && (account_is_owner? || account_is_collaborator?)
     end
 
     def can_remove_links?
-      account_is_owner? || account_is_collaborator?
+      can_read? && (account_is_owner? || account_is_collaborator?)
     end
 
     def can_add_collaborators?
-      account_is_owner?
+      can_read? && account_is_owner?
     end
 
     def can_remove_collaborators?
-      account_is_owner?
+      can_read? && account_is_owner?
     end
 
     def can_collaborate?
@@ -62,6 +63,14 @@ module WiseTube
     # rubocop:enable Metrics/MethodLength
 
     private
+
+    def can_read?
+      @auth_scope ? @auth_scope.can_read?('projects') : false
+    end
+
+    def can_write?
+      @auth_scope ? @auth_scope.can_write?('projects') : false
+    end
 
     def account_is_owner?
       @playlist.owner == @account
