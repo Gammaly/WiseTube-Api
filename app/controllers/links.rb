@@ -16,7 +16,7 @@ module WiseTube
 
         routing.get do
           link = GetLinkQuery.call(
-            requestor: @auth_account, link: @req_link
+            auth: @auth, link: @req_link
           )
 
           { data: link }.to_json
@@ -25,7 +25,7 @@ module WiseTube
         rescue GetLinkQuery::NotFoundError => e
           routing.halt 404, { message: e.message }.to_json
         rescue StandardError => e
-          puts "GET DOCUMENT ERROR: #{e.inspect}"
+          Api.logger.warn "Link Error: #{e.inspect}"
           routing.halt 500, { message: 'API server error' }.to_json
         end
       end

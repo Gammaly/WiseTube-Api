@@ -18,10 +18,10 @@ module WiseTube
     end
 
     # Link for given requestor account
-    def self.call(requestor:, link:)
+    def self.call(auth:, link:)
       raise NotFoundError unless link
 
-      policy = LinkPolicy.new(requestor, link)
+      policy = LinkPolicy.new(auth[:account], link, auth[:scope])
       raise ForbiddenError unless policy.can_view?
 
       link

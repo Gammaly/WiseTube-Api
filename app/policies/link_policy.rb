@@ -2,21 +2,22 @@
 
 # Policy to determine if account can view a playlist
 class LinkPolicy
-  def initialize(account, link)
+  def initialize(account, link, auth_scope = nil)
     @account = account
     @link = link
+    @auth_scope = auth_scope
   end
 
   def can_view?
-    account_owns_playlist? || account_collaborates_on_playlist?
+    can_read? && (account_owns_playlist? || account_collaborates_on_playlist?)
   end
 
   def can_edit?
-    account_owns_playlist? || account_collaborates_on_playlist?
+    can_read? && (account_owns_playlist? || account_collaborates_on_playlist?)
   end
 
   def can_delete?
-    account_owns_playlist? || account_collaborates_on_playlist?
+    can_read? && (account_owns_playlist? || account_collaborates_on_playlist?)
   end
 
   def summary
@@ -28,6 +29,14 @@ class LinkPolicy
   end
 
   private
+
+  def can_read?
+    @auth_scope ? @auth_scope.can_read?('links') : false
+  end
+
+  def can_write?
+    @auth_scope ? @auth_scope.can_write?('links') : false
+  end
 
   def account_owns_playlist?
     @link.playlist.owner == @account

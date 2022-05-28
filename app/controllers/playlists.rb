@@ -7,8 +7,7 @@ module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     route('playlists') do |routing|
-      unauthorized_message = { message: 'Unauthorized Request' }.to_json
-      routing.halt(403, unauthorized_message) unless @auth_account
+      routing.halt(403, UNAUTH_MSG) unless @auth_account
 
       @playlist_route = "#{@api_root}/playlists"
       routing.on String do |playlist_id|
@@ -16,9 +15,7 @@ module WiseTube
 
         # GET api/v1/playlists/[ID]
         routing.get do
-          playlist = GetPlaylistQuery.call(
-            account: @auth_account, playlist: @req_playlist
-          )
+          playlist = GetPlaylistQuery.call(auth: @auth, playlist: @req_playlist)
 
           { data: playlist }.to_json
         rescue GetPlaylistQuery::ForbiddenError => e
@@ -34,7 +31,7 @@ module WiseTube
           # POST api/v1/playlists/[playlist_id]/links
           routing.post do
             new_link = CreateLink.call(
-              account: @auth_account,
+              auth: @auth,
               playlist: @req_playlist,
               link_data: JSON.parse(routing.body.read)
             )
@@ -58,7 +55,7 @@ module WiseTube
             req_data = JSON.parse(routing.body.read)
 
             collaborator = AddCollaborator.call(
-              account: @auth_account,
+              auth: @auth,
               playlist: @req_playlist,
               collab_email: req_data['email']
             )
@@ -74,7 +71,7 @@ module WiseTube
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             collaborator = RemoveCollaborator.call(
-              req_username: @auth_account.username,
+              auth: @auth,
               collab_email: req_data['email'],
               playlist_id:
             )
@@ -102,7 +99,10 @@ module WiseTube
         # POST api/v1/playlists
         routing.post do
           new_data = JSON.parse(routing.body.read)
-          new_playlist = @auth_account.add_owned_playlist(new_data)
+          
+          new_playlist = CreatePlaylistForOwner.call(
+            auth: @auth, playlist_data: new_data
+          )
 
           response.status = 201
           response['Location'] = "#{@playlist_route}/#{new_playlist.id}"
@@ -110,6 +110,8 @@ module WiseTube
         rescue Sequel::MassAssignmentRestriction
           Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
           routing.halt 400, { message: 'Illegal Request' }.to_json
+        rescue CreatePlaylistForOwner::ForbiddenError => e
+          routing.halt 403, { message: e.message }.to_json
         rescue StandardError
           Api.logger.error "Unknown error: #{e.message}"
           routing.halt 500, { message: 'API server error' }.to_json

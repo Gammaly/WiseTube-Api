@@ -17,14 +17,10 @@ module WiseTube
       end
     end
 
-    def self.call(account:, playlist:, link_data:)
-      policy = PlaylistPolicy.new(account, playlist)
+    def self.call(auth:, playlist:, link_data:)
+      policy = PlaylistPolicy.new(auth[:account], playlist, auth[:scope])
       raise ForbiddenError unless policy.can_add_links?
 
-      add_link(playlist, link_data)
-    end
-
-    def self.add_link(playlist, link_data)
       playlist.add_link(link_data)
     rescue Sequel::MassAssignmentRestriction
       raise IllegalRequestError

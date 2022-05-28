@@ -14,13 +14,25 @@ def wipe_database
   WiseTube::Account.map(&:destroy)
 end
 
-def auth_header(account_data)
-  auth = WiseTube::AuthenticateAccount.call(
+def authenticate(account_data)
+  WiseTube::AuthenticateAccount.call(
     username: account_data['username'],
     password: account_data['password']
   )
+end
 
+def auth_header(account_data)
+  auth = authenticate(account_data)
   "Bearer #{auth[:attributes][:auth_token]}"
+end
+
+def authorization(account_data)
+  auth = authenticate(account_data)
+
+  token = AuthToken.new(auth[:attributes][:auth_token])
+  account = token.payload['attributes']
+  { account: WiseΤube::Account.first(username: account['username']),
+    scope: AuthScope.new(token.scope) }
 end
 
 DATA = {

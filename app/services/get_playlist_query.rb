@@ -17,10 +17,10 @@ module WiseTube
       end
     end
 
-    def self.call(account:, playlist:)
+    def self.call(auth:, playlist:)
       raise NotFoundError unless playlist
 
-      policy = PlaylistPolicy.new(account, playlist)
+      policy = PlaylistPolicy.new(auth[:account], playlist, auth[:scope])
       raise ForbiddenError unless policy.can_view?
 
       playlist.full_details.merge(policies: policy.summary)

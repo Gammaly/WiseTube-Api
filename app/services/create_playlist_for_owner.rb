@@ -3,9 +3,17 @@
 module WiseTube
   # Service object to create a new playlist for an owner
   class CreatePlaylistForOwner
-    def self.call(owner_id:, playlist_data:)
-      Account.find(id: owner_id)
-             .add_owned_playlist(playlist_data)
+    # Error for owner cannot be collaborator
+    class ForbiddenError < StandardError
+      def message
+        'You are not allowed to add more links'
+      end
+    end
+
+    def self.call(auth:, playlist_data:)
+      raise ForbiddenError unless auth[:scope].can_write?('playlists')
+
+      auth[:account].add_owned_playlist(playlist_data)
     end
   end
 end
