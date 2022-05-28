@@ -16,7 +16,7 @@ module WiseTube
 
       policy = CollaborationRequestPolicy.new(
         playlist, auth[:account], collaborator, auth[:scope]
-        )
+      )
       raise ForbiddenError unless policy.can_remove?
 
       playlist.remove_collaborator(collaborator)

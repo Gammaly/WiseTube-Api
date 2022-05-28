@@ -14,7 +14,7 @@ module WiseTube
         # GET api/v1/accounts/[username]
         routing.get do
           auth = AuthorizeAccount.call(
-            auth: @auth, username: username,
+            auth: @auth, username:,
             auth_scope: AuthScope.new(AuthScope::READ_ONLY)
           )
           { data: auth }.to_json
