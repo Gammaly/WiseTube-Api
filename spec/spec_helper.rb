@@ -23,6 +23,7 @@ end
 
 def auth_header(account_data)
   auth = authenticate(account_data)
+  
   "Bearer #{auth[:attributes][:auth_token]}"
 end
 
@@ -31,7 +32,7 @@ def authorization(account_data)
 
   token = AuthToken.new(auth[:attributes][:auth_token])
   account = token.payload['attributes']
-  { account: WiseΤube::Account.first(username: account['username']),
+  { account: WiseTube::Account.first(username: account['username']),
     scope: AuthScope.new(token.scope) }
 end
 
@@ -40,3 +41,10 @@ DATA = {
   links: YAML.load(File.read('app/db/seeds/links_seed.yml')),
   playlists: YAML.load(File.read('app/db/seeds/playlists_seed.yml'))
 }.freeze
+
+## SSO fixtures
+GH_ACCOUNT_RESPONSE = YAML.load(
+  File.read('spec/fixtures/github_token_response.yml')
+)
+GOOD_GH_ACCESS_TOKEN = GH_ACCOUNT_RESPONSE.keys.first
+SSO_ACCOUNT = YAML.load(File.read('spec/fixtures/sso_account.yml'))
