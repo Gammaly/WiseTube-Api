@@ -99,7 +99,7 @@ module WiseTube
         # POST api/v1/playlists
         routing.post do
           new_data = JSON.parse(routing.body.read)
-          
+
           new_playlist = CreatePlaylistForOwner.call(
             auth: @auth, playlist_data: new_data
           )

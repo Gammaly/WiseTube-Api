@@ -22,7 +22,7 @@ describe 'Test AddCollaborator service' do
     auth = authorization(@owner_data)
 
     WiseTube::AddCollaborator.call(
-      auth: auth,
+      auth:,
       playlist: @playlist,
       collab_email: @collaborator.email
     )
@@ -39,7 +39,7 @@ describe 'Test AddCollaborator service' do
 
     _(proc {
       WiseTube::AddCollaborator.call(
-        auth: auth,
+        auth:,
         playlist: @playlist,
         collab_email: @owner.email
       )
