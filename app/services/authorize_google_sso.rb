@@ -4,24 +4,24 @@ require 'http'
 
 module WiseTube
   # Find or create an SsoAccount based on Github code
-  class AuthorizeSso
+  class AuthorizeGoogleSso
     def call(access_token)
-      github_account = get_github_account(access_token)
-      sso_account = find_or_create_sso_account(github_account)
+      google_account = get_google_account(access_token)
+      sso_account = find_or_create_sso_account(google_account)
 
       account_and_token(sso_account)
     end
 
-    def get_github_account(access_token)
-      gh_response = HTTP.headers(
+    def get_google_account(access_token)
+      google_response = HTTP.headers(
         user_agent: 'WiseTube',
-        authorization: "token #{access_token}",
+        authorization: "token #{access_token}", # Not neccessary for google
         accept: 'application/json'
-      ).get(ENV['GITHUB_ACCOUNT_URL'])
+      ).get("#{ENV['GOOGLE_ACCOUNT_URL']}?access_token=#{access_token}")
+      puts google_response
+      raise unless google_response.status == 200
 
-      raise unless gh_response.status == 200
-
-      account = GithubAccount.new(JSON.parse(gh_response))
+      account = GoogleAccount.new(JSON.parse(google_response))
       { username: account.username, email: account.email }
     end
 
