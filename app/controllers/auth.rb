@@ -38,17 +38,32 @@ module WiseTube
         end
       end
 
-      # POST /api/v1/auth/sso
-      routing.post 'sso' do
+      # POST /api/v1/auth/gh_sso
+      routing.post 'gh_sso' do
         auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-
-        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        puts auth_request
+        auth_account = AuthorizeGithubSso.new.call(auth_request[:access_token])
+        
         { data: auth_account }.to_json
       rescue StandardError => e
         puts "FAILED to validate Github account: #{e.inspect}"
         puts e.backtrace
         routing.halt 400
       end
+
+      # POST /api/v1/auth/google_sso
+      routing.post 'google_sso' do
+        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
+        puts auth_request
+        auth_account = AuthorizeGoogleSso.new.call(auth_request[:access_token])
+        
+        { data: auth_account }.to_json
+      rescue StandardError => error
+        puts "FAILED to validate Google account: #{error.inspect}"
+        puts error.backtrace
+        routing.halt 400
+      end
+
     end
   end
 end
