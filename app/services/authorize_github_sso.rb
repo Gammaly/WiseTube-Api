@@ -34,7 +34,7 @@ module WiseTube
       {
         type: 'sso_account',
         attributes: {
-          account: account,
+          account:,
           auth_token: AuthToken.create(account)
         }
       }

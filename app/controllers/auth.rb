@@ -45,9 +45,9 @@ module WiseTube
         auth_account = AuthorizeGithubSso.new.call(auth_request[:access_token])
         
         { data: auth_account }.to_json
-      rescue StandardError => error
-        puts "FAILED to validate Github account: #{error.inspect}"
-        puts error.backtrace
+      rescue StandardError => e
+        puts "FAILED to validate Github account: #{e.inspect}"
+        puts e.backtrace
         routing.halt 400
       end
 
@@ -65,6 +65,5 @@ module WiseTube
       end
 
     end
-    # rubocop:enable Metrics/BlockLength
   end
 end
