@@ -15,9 +15,9 @@ module WiseTube
       @registration = registration
     end
 
-    def from_email = ENV['SENDGRID_FROM_EMAIL']
-    def mail_api_key = ENV['SENDGRID_API_KEY']
-    def mail_url = ENV['SENDGRID_API_URL']
+    def from_email = ENV.fetch('SENDGRID_FROM_EMAIL')
+    def mail_api_key = ENV.fetch('SENDGRID_API_KEY')
+    def mail_url = ENV.fetch('SENDGRID_API_URL')
 
     def call
       raise(InvalidRegistration, 'Username exists') unless username_available?

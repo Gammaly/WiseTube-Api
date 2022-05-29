@@ -30,3 +30,14 @@ Style/SymbolArray:
   Exclude:
     # - Rakefile
     - app/db/migrations/*.rb
+
+Style/MixinUsage:
+  Enabled: true
+  Exclude:
+    - app/db/seeds/20220423_create_all.rb
+
+Style/StringConcatenation:
+  Enabled: true
+  Exclude:
+    - app/models/github_account.rb
+    - app/models/google_account.rb
