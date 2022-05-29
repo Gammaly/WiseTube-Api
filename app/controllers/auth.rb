@@ -63,7 +63,6 @@ module WiseTube
         puts error.backtrace
         routing.halt 400
       end
-
     end
   end
 end
