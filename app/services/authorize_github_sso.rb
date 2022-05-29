@@ -17,7 +17,7 @@ module WiseTube
         user_agent: 'WiseTube',
         authorization: "token #{access_token}",
         accept: 'application/json'
-      ).get(ENV['GITHUB_ACCOUNT_URL'])
+      ).get(ENV.fetch('GITHUB_ACCOUNT_URL'))
       puts gh_response
       raise unless gh_response.status == 200
 

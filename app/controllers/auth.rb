@@ -43,7 +43,7 @@ module WiseTube
         auth_request = JsonRequestBody.parse_symbolize(request.body.read)
         puts auth_request
         auth_account = AuthorizeGithubSso.new.call(auth_request[:access_token])
-        
+
         { data: auth_account }.to_json
       rescue StandardError => e
         puts "FAILED to validate Github account: #{e.inspect}"
@@ -56,11 +56,11 @@ module WiseTube
         auth_request = JsonRequestBody.parse_symbolize(request.body.read)
         puts auth_request
         auth_account = AuthorizeGoogleSso.new.call(auth_request[:access_token])
-        
+
         { data: auth_account }.to_json
-      rescue StandardError => error
-        puts "FAILED to validate Google account: #{error.inspect}"
-        puts error.backtrace
+      rescue StandardError => e
+        puts "FAILED to validate Google account: #{e.inspect}"
+        puts e.backtrace
         routing.halt 400
       end
     end

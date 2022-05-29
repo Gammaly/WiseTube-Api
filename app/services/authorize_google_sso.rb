@@ -17,7 +17,7 @@ module WiseTube
         user_agent: 'WiseTube',
         authorization: "token #{access_token}", # Not neccessary for google
         accept: 'application/json'
-      ).get("#{ENV['GOOGLE_ACCOUNT_URL']}?access_token=#{access_token}")
+      ).get("#{ENV.fetch('GOOGLE_ACCOUNT_URL')}?access_token=#{access_token}")
       puts google_response
       raise unless google_response.status == 200
 
@@ -34,7 +34,7 @@ module WiseTube
       {
         type: 'sso_account',
         attributes: {
-          account: account,
+          account:,
           auth_token: AuthToken.create(account)
         }
       }

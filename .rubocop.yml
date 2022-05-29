@@ -40,3 +40,4 @@ Style/StringConcatenation:
   Enabled: true
   Exclude:
     - app/models/github_account.rb
+    - app/models/google_account.rb
