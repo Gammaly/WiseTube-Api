@@ -7,11 +7,17 @@ module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     route('auth') do |routing| # rubocop:disable Metrics/BlockLength
+      # All requests in this route require signed requests
+      begin
+        @request_data = SignedRequest.new(Api.config).parse(request.body.read)
+      rescue SignedRequest::VerificationError
+        routing.halt '403', { message: 'Must sign request' }.to_json
+      end
+
       routing.on 'register' do
         # POST api/v1/auth/register
         routing.post do
-          reg_data = JsonRequestBody.parse_symbolize(request.body.read)
-          VerifyRegistration.new(reg_data).call
+          VerifyRegistration.new(@request_data).call
 
           response.status = 202
           { message: 'Verification email sent' }.to_json
@@ -28,8 +34,7 @@ module WiseTube
       routing.is 'authenticate' do
         # POST /api/v1/auth/authenticate
         routing.post do
-          credentials = JsonRequestBody.parse_symbolize(request.body.read)
-          auth_account = AuthenticateAccount.call(credentials)
+          auth_account = AuthenticateAccount.call(@request_data)
           { data: auth_account }.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
@@ -40,9 +45,7 @@ module WiseTube
 
       # POST /api/v1/auth/gh_sso
       routing.post 'gh_sso' do
-        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-        puts auth_request
-        auth_account = AuthorizeGithubSso.new.call(auth_request[:access_token])
+        auth_account = AuthorizeGithubSso.new.call(@request_data[:access_token])
 
         { data: auth_account }.to_json
       rescue StandardError => e
@@ -53,9 +56,7 @@ module WiseTube
 
       # POST /api/v1/auth/google_sso
       routing.post 'google_sso' do
-        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-        puts auth_request
-        auth_account = AuthorizeGoogleSso.new.call(auth_request[:access_token])
+        auth_account = AuthorizeGoogleSso.new.call(@request_data[:access_token])
 
         { data: auth_account }.to_json
       rescue StandardError => e
