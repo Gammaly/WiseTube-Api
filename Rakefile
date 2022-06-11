@@ -34,7 +34,7 @@ end
 
 desc 'Checks for release'
 task :release? => [:spec, :style, :audit] do
-  puts "\nReady for release!"
+  puts '\nReady for release!'
 end
 
 task :print_env do
@@ -101,7 +101,7 @@ namespace :db do
 end
 
 namespace :newkey do
-   task(:load_libs) { require_app 'lib' }
+  task(:load_libs) { require_app 'lib' }
 
   desc 'Create sample cryptographic key for database'
   task :db => :load_libs do
@@ -120,7 +120,7 @@ namespace :newkey do
     keypair = SignedRequest.generate_keypair
 
     puts "SIGNING_KEY: #{keypair[:signing_key]}"
-    puts " VERIFY_KEY: #{keypair[:verify_key]}"
+    puts "VERIFY_KEY: #{keypair[:verify_key]}"
   end
 end
 

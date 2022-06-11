@@ -40,7 +40,7 @@ module WiseTube
       rescue SignedRequest::VerificationError
         routing.halt 403, { message: 'Must sign request' }.to_json
       rescue StandardError => e
-        Api.logger.error 'Unknown error saving account'
+        Api.logger.error "Unknown error saving account: #{e}"
         routing.halt 500, { message: 'Error creating account' }.to_json
       end
     end
