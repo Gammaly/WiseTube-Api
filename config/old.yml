@@ -1,0 +1,33 @@
+---
+development:
+  MSG_KEY: QwsjC6WdxnNYjiWn5qOFp4xBRFcWY+wjrARjV0Vz3cA=
+  DATABASE_URL: sqlite://app/db/store/development.db
+  DB_KEY: 3v7TcNIhAqSF9vM7H7Nt1FgfOXmQ5Oc0jZw3PcTqEFI=
+  SENDGRID_API_KEY: <provision new API key on SendGrid>
+  SENDGRID_API_URL: https://api.sendgrid.com/v3/mail/send
+  SENDGRID_FROM_EMAIL: <provision single sender email address on SendGrid>
+  SECURE_SCHEME: HTTP
+  GITHUB_ACCOUNT_URL: https://api.github.com/user
+  GOOGLE_ACCOUNT_URL: https://www.googleapis.com/oauth2/v1/userinfo
+
+test:
+  MSG_KEY: QwsjC6WdxnNYjiWn5qOFp4xBRFcWY+wjrARjV0Vz3cA=
+  DATABASE_URL: sqlite://app/db/store/test.db
+  DB_KEY: 3v7TcNIhAqSF9vM7H7Nt1FgfOXmQ5Oc0jZw3PcTqEFI=
+  SENDGRID_API_KEY: <provision new API key on SendGrid>
+  SENDGRID_API_URL: https://api.sendgrid.com/v3/mail/send
+  SENDGRID_FROM_EMAIL: <provision single sender email address on SendGrid>
+  SECURE_SCHEME: HTTP
+  GITHUB_ACCOUNT_URL: https://api.github.com/user
+  GOOGLE_ACCOUNT_URL: https://www.googleapis.com/oauth2/v1/userinfo
+
+production:
+  MSG_KEY: QwsjC6WdxnNYjiWn5qOFp4xBRFcWY+wjrARjV0Vz3cA=
+  DATABASE_URL: <set to production DB>
+  DB_KEY: <use rake newkey:db to generate a secret key>
+  SENDGRID_API_KEY: <provision new API key on SendGrid>
+  SENDGRID_API_URL: https://api.sendgrid.com/v3/mail/send
+  SENDGRID_FROM_EMAIL: <provision single sender email address on SendGrid>
+  SECURE_SCHEME: HTTPS
+  GITHUB_ACCOUNT_URL: https://api.github.com/user
+  GOOGLE_ACCOUNT_URL: https://www.googleapis.com/oauth2/v1/userinfo

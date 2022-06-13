@@ -47,5 +47,21 @@ module WiseTube
     def to_json(options = {})
       JSON(to_h, options)
     end
+    
+    def public_attributes_hash
+      {
+        id:       id,
+        name:     name,
+        repo_url: repo_url
+      }
+    end
+
+    def relationships_hash
+      {
+        owner:         owner,
+        collaborators: collaborators,
+        documents:     documents
+      }
+    end
   end
 end
