@@ -38,6 +38,9 @@ end
 gem 'pry' # necessary for rake console
 gem 'rack-test'
 
+# Application
+gem 'google-apis-youtube_v3', '~>0.17.0'
+
 # Development
 group :development do
   gem 'rerun'
