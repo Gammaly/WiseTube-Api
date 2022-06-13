@@ -7,17 +7,24 @@ module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     route('auth') do |routing| # rubocop:disable Metrics/BlockLength
-      # All requests in this route require signed requests
-      begin
-        @request_data = SignedRequest.new(Api.config).parse(request.body.read)
-      rescue SignedRequest::VerificationError
-        routing.halt '403', { message: 'Must sign request' }.to_json
-      end
+      # YES_SignedRequest
+      # # All requests in this route require signed requests
+      # begin
+      #   @request_data = SignedRequest.new(Api.config).parse(request.body.read)
+      # rescue SignedRequest::VerificationError
+      #   routing.halt '403', { message: 'Must sign request' }.to_json
+      # end
 
       routing.on 'register' do
         # POST api/v1/auth/register
         routing.post do
-          VerifyRegistration.new(@request_data).call
+          # YES_SignedRequest
+          # VerifyRegistration.new(@request_data).call
+
+          # NO_SignedRequest
+          reg_data = JsonRequestBody.parse_symbolize(request.body.read)
+          VerifyRegistration.new(reg_data).call
+          # END
 
           response.status = 202
           { message: 'Verification email sent' }.to_json
@@ -34,7 +41,14 @@ module WiseTube
       routing.is 'authenticate' do
         # POST /api/v1/auth/authenticate
         routing.post do
-          auth_account = AuthenticateAccount.call(@request_data)
+          # YES_SignedRequest
+          # auth_account = AuthenticateAccount.call(@request_data)
+
+          # NO_SignedRequest
+          credentials = JsonRequestBody.parse_symbolize(request.body.read)
+          auth_account = AuthenticateAccount.call(credentials)
+          # END
+
           { data: auth_account }.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
@@ -45,7 +59,13 @@ module WiseTube
 
       # POST /api/v1/auth/gh_sso
       routing.post 'gh_sso' do
-        auth_account = AuthorizeGithubSso.new.call(@request_data[:access_token])
+        # YES_SignedRequest
+        # auth_account = AuthorizeGithubSso.new.call(@request_data[:access_token])
+
+        # NO_SignedRequest
+        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
+        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        # END
 
         { data: auth_account }.to_json
       rescue StandardError => e
@@ -56,7 +76,13 @@ module WiseTube
 
       # POST /api/v1/auth/google_sso
       routing.post 'google_sso' do
-        auth_account = AuthorizeGoogleSso.new.call(@request_data[:access_token])
+        # YES_SignedRequest
+        # auth_account = AuthorizeGoogleSso.new.call(@request_data[:access_token])
+
+        # NO_SignedRequest
+        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
+        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        # END
 
         { data: auth_account }.to_json
       rescue StandardError => e

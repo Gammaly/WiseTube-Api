@@ -20,9 +20,15 @@ describe 'Test Authentication Routes' do
     it 'HAPPY: should authenticate valid credentials' do
       credentials = { username: @account_data['username'],
                       password: @account_data['password'] }
-      post 'api/v1/auth/authenticate',
-           SignedRequest.new(app.config).sign(credentials).to_json,
-           @req_header
+      
+      # NO_SignedRequest
+      post 'api/v1/auth/authenticate', credentials.to_json, @req_header
+      # END
+      
+      # YES_SignedRequest
+      # post 'api/v1/auth/authenticate', credentials.to_json, @req_header# post 'api/v1/auth/authenticate',
+      #      SignedRequest.new(app.config).sign(credentials).to_json,
+      #      @req_header
 
       auth_account = JSON.parse(last_response.body)['data']
       account = auth_account['attributes']['account']['attributes']
@@ -33,12 +39,18 @@ describe 'Test Authentication Routes' do
     end
 
     it 'BAD: should not authenticate invalid password' do
-      bad_credentials = { username: @account_data['username'],
-                          password: 'fakepassword' }
-
-      post 'api/v1/auth/authenticate',
-           SignedRequest.new(app.config).sign(bad_credentials).to_json,
-           @req_header
+      # NO_SignedRequest
+      credentials = { username: @account_data['username'],
+      password: 'fakepassword' }
+      post 'api/v1/auth/authenticate', credentials.to_json, @req_header
+      # END
+      
+      # YES_SignedRequest
+      # bad_credentials = { username: @account_data['username'],
+      # password: 'fakepassword' }
+      # post 'api/v1/auth/authenticate',
+      #      SignedRequest.new(app.config).sign(bad_credentials).to_json,
+      #      @req_header
 
       result = JSON.parse(last_response.body)
 
@@ -64,9 +76,14 @@ describe 'Test Authentication Routes' do
     it 'HAPPY AUTH SSO: should authenticate+authorize new valid Github SSO account' do
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
 
-      post 'api/v1/auth/gh_sso',
-           SignedRequest.new(app.config).sign(gh_access_token).to_json,
-           @req_header
+      # NO_SignedRequest
+      post 'api/v1/auth/sso', gh_access_token.to_json, @req_header
+      # END
+
+      # YES_SignedRequest
+      # post 'api/v1/auth/gh_sso',
+      #      SignedRequest.new(app.config).sign(gh_access_token).to_json,
+      #      @req_header
 
       auth_account = JSON.parse(last_response.body)['data']
       account = auth_account['attributes']['account']['attributes']
@@ -84,9 +101,15 @@ describe 'Test Authentication Routes' do
       )
 
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
-      post 'api/v1/auth/gh_sso',
-           SignedRequest.new(app.config).sign(gh_access_token).to_json,
-           @req_header
+      
+      # NO_SignedRequest
+      post 'api/v1/auth/sso', gh_access_token.to_json, @req_header
+      # END
+
+      # YES_SignedRequest
+      # post 'api/v1/auth/gh_sso',
+      #      SignedRequest.new(app.config).sign(gh_access_token).to_json,
+      #      @req_header
 
       auth_account = JSON.parse(last_response.body)['data']
       account = auth_account['attributes']['account']['attributes']
