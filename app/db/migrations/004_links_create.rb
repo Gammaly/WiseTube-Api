@@ -14,6 +14,9 @@ Sequel.migration do
       String :url, null: false, default: ''
       String :image_secure
 
+      String :note_secure
+      String :comment_secure
+
       DateTime :created_at
       DateTime :updated_at
 

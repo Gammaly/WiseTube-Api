@@ -12,7 +12,7 @@ module WiseTube
     plugin :timestamps, update_on_create: true
 
     plugin :whitelist_security
-    set_allowed_columns :title, :description, :url, :image
+    set_allowed_columns :title, :description, :url, :image, :note, :comment
 
     # Secure getters and setters
     def description
@@ -31,6 +31,22 @@ module WiseTube
       self.image_secure = SecureDB.encrypt(plaintext)
     end
 
+    def note
+      SecureDB.decrypt(note_secure)
+    end
+
+    def note=(plaintext)
+      self.note_secure = SecureDB.encrypt(plaintext)
+    end
+
+    def comment
+      SecureDB.decrypt(comment_secure)
+    end
+
+    def comment=(plaintext)
+      self.comment_secure = SecureDB.encrypt(plaintext)
+    end
+
     # rubocop:disable Metrics/MethodLength
     def to_json(options = {})
       JSON(
@@ -41,7 +57,9 @@ module WiseTube
             title:,
             description:,
             url:,
-            image:
+            image:,
+            note:,
+            comment:
           },
           included: {
             playlist:

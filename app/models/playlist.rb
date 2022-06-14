@@ -47,7 +47,7 @@ module WiseTube
     def to_json(options = {})
       JSON(to_h, options)
     end
-    
+
     def public_attributes_hash
       {
         id:       id,
