@@ -18,7 +18,7 @@ module WiseTube
         authorization: "token #{access_token}", # Not neccessary for google
         accept: 'application/json'
       ).get("#{ENV.fetch('GOOGLE_ACCOUNT_URL')}?access_token=#{access_token}")
-      puts google_response
+
       raise unless google_response.status == 200
 
       account = GoogleAccount.new(JSON.parse(google_response))

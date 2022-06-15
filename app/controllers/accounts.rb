@@ -35,6 +35,7 @@ module WiseTube
         # NO_SignedRequest
         account_data = JSON.parse(routing.body.read)
         new_account = Account.new(account_data)
+        raise('Could not save account') unless new_account.save
         # END
 
         response.status = 201

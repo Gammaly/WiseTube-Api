@@ -64,7 +64,7 @@ module WiseTube
 
         # NO_SignedRequest
         auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        auth_account = AuthorizeGithubSso.new.call(auth_request[:access_token])
         # END
 
         { data: auth_account }.to_json
@@ -81,7 +81,7 @@ module WiseTube
 
         # NO_SignedRequest
         auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-        auth_account = AuthorizeSso.new.call(auth_request[:access_token])
+        auth_account = AuthorizeGoogleSso.new.call(auth_request[:access_token])
         # END
 
         { data: auth_account }.to_json

@@ -47,12 +47,7 @@ describe 'Test Account Handling' do
       _(last_response.header['Location'].size).must_be :>, 0
 
       created = JSON.parse(last_response.body)['data']['attributes']
-
-      puts created
-      puts "-------------"
       account = WiseTube::Account.first
-
-      puts account
 
       _(created['username']).must_equal @account_data['username']
       _(created['email']).must_equal @account_data['email']

@@ -41,7 +41,7 @@ describe 'Test Authentication Routes' do
     it 'BAD: should not authenticate invalid password' do
       # NO_SignedRequest
       credentials = { username: @account_data['username'],
-      password: 'fakepassword' }
+                      password: 'fakepassword' }
       post 'api/v1/auth/authenticate', credentials.to_json, @req_header
       # END
       
@@ -77,7 +77,7 @@ describe 'Test Authentication Routes' do
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
 
       # NO_SignedRequest
-      post 'api/v1/auth/sso', gh_access_token.to_json, @req_header
+      post 'api/v1/auth/gh_sso', gh_access_token.to_json, @req_header
       # END
 
       # YES_SignedRequest
@@ -103,7 +103,7 @@ describe 'Test Authentication Routes' do
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
 
       # NO_SignedRequest
-      post 'api/v1/auth/sso', gh_access_token.to_json, @req_header
+      post 'api/v1/auth/gh_sso', gh_access_token.to_json, @req_header
       # END
 
       # YES_SignedRequest

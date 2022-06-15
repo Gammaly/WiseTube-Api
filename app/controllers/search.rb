@@ -13,9 +13,7 @@ module WiseTube
       # GET api/v1/search?q=keyword
       routing.on do
         q = routing.params["q"]
-        puts q
         routing.get do
-          puts "hwllo"
           data = SearchVideos.call(q: q)
 
           { data: data }.to_json
