@@ -7,9 +7,10 @@ YOUTUBE_API_KEY = "#{ENV.fetch('YOUTUBE_API_KEY')}"
 
 module WiseTube
   module Youtube
+    # Get data from Youtube Api
     class YoutubeApi
       def initialize
-        @service =  Google::Apis::YoutubeV3::YouTubeService.new
+        @service = Google::Apis::YoutubeV3::YouTubeService.new
         @service.key = "#{YOUTUBE_API_KEY}"
       end
 
