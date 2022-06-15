@@ -98,9 +98,9 @@ GEM
       listen (~> 3.0)
     retriable (3.1.2)
     rexml (3.2.5)
-    roda (3.56.0)
+    roda (3.57.0)
       rack
-    rubocop (1.30.0)
+    rubocop (1.30.1)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -111,12 +111,12 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.18.0)
       parser (>= 3.1.1.0)
-    rubocop-performance (1.14.0)
+    rubocop-performance (1.14.2)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    sequel (5.56.0)
+    sequel (5.57.0)
     sequel-seed (1.1.2)
       sequel (>= 4.49.0)
     signet (0.16.1)
@@ -124,7 +124,7 @@ GEM
       faraday (>= 0.17.5, < 3.0)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
-    sqlite3 (1.4.2)
+    sqlite3 (1.4.4)
     thor (1.2.1)
     trailblazer-option (0.1.2)
     uber (0.1.0)
@@ -140,7 +140,6 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
-  x86_64-linux
 
 DEPENDENCIES
   bundler-audit

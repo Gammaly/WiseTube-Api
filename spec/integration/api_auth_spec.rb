@@ -101,7 +101,7 @@ describe 'Test Authentication Routes' do
       )
 
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
-      
+
       # NO_SignedRequest
       post 'api/v1/auth/sso', gh_access_token.to_json, @req_header
       # END
