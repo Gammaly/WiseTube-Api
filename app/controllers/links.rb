@@ -13,7 +13,7 @@ module WiseTube
       # GET api/v1/links/[link_id]
       routing.on String do |link_id|
         @req_link = Link.first(id: link_id)
-
+        puts("link note:#{@req_link.note}")
         routing.get do
           link = GetLinkQuery.call(
             auth: @auth, link: @req_link
