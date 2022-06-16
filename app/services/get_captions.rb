@@ -23,7 +23,6 @@ module WiseTube
 
       data = Python::Command.new.captions(q).call
       #raise ForbiddenError unless policy.can_view?
-
       data
     end
   end

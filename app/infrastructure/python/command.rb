@@ -12,13 +12,13 @@ module WiseTube
       end
 
       def captions(video_id)
-        @command = 'captions.py'
+        @command = 'app/infrastructure/python/captions.py'
         @params = video_id
         self
       end
 
       def word_frequency(video_id)
-        @command = 'word_frequency.py'
+        @command = 'app/infrastructure/python/word_frequency.py'
         @params = video_id
         self
       end
