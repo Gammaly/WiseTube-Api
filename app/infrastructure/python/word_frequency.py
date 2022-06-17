@@ -1,5 +1,4 @@
 import sys
-import nltk
 import wordcloud
 from youtube_transcript_api import YouTubeTranscriptApi
 
