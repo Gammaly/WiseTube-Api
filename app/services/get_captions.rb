@@ -18,12 +18,11 @@ module WiseTube
     end
 
     # Get caption
-    def self.call(q: )
-      raise NotFoundError unless q
+    def self.call(input:)
+      raise NotFoundError unless input
 
-      data = Python::Command.new.captions(q).call
-      #raise ForbiddenError unless policy.can_view?
-      data
+      Python::Command.new.captions(input).call
+      # raise ForbiddenError unless policy.can_view?
     end
   end
 end

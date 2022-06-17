@@ -3,7 +3,6 @@
 require_relative './app'
 require 'pp'
 
-# rubocop:disable Metrics/BlockLength
 module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
@@ -37,4 +36,3 @@ module WiseTube
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

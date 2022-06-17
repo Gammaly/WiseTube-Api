@@ -6,17 +6,17 @@ module WiseTube
   # Web controller for WiseTube API
   class Api < Roda
     route('search') do |routing|
-      #routing.halt 403, { message: 'Not authorized' }.to_json unless @auth_account
+      # routing.halt 403, { message: 'Not authorized' }.to_json unless @auth_account
 
       @link_route = "#{@api_root}/search"
 
       # GET api/v1/search?q=keyword
       routing.on do
-        q = routing.params["q"]
+        q = routing.params['q']
         routing.get do
-          data = SearchVideos.call(q: q)
+          data = SearchVideos.call(q:)
 
-          { data: data }.to_json
+          { data: }.to_json
         rescue SearchVideos::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
         rescue SearchVideos::NotFoundError => e
