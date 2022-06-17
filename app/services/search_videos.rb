@@ -18,11 +18,11 @@ module WiseTube
     end
 
     # Search Video
-    def self.call(q: )
+    def self.call(q:)
       raise NotFoundError unless q
 
       data = Youtube::YoutubeApi.new.search_videos(q)
-      #raise ForbiddenError unless policy.can_view?
+      # raise ForbiddenError unless policy.can_view?
 
       data
     end

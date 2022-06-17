@@ -50,17 +50,17 @@ module WiseTube
 
     def public_attributes_hash
       {
-        id:       id,
-        name:     name,
-        repo_url: repo_url
+        id:,
+        name:,
+        repo_url:
       }
     end
 
     def relationships_hash
       {
-        owner:         owner,
-        collaborators: collaborators,
-        documents:     documents
+        owner:,
+        collaborators:,
+        documents:
       }
     end
   end

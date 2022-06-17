@@ -44,7 +44,7 @@ describe 'Test Authentication Routes' do
                       password: 'fakepassword' }
       post 'api/v1/auth/authenticate', credentials.to_json, @req_header
       # END
-      
+
       # YES_SignedRequest
       # bad_credentials = { username: @account_data['username'],
       # password: 'fakepassword' }
