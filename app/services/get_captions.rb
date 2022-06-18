@@ -18,7 +18,7 @@ module WiseTube
     end
 
     # Get caption
-    def self.call(input:)
+    def self.call(input)
       raise NotFoundError unless input
 
       Python::Command.new.captions(input).call
