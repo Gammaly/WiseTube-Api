@@ -1,11 +1,15 @@
+# ---
+# - ya29.a0ARrdaM-Sq2Dd3r_ByTcFNfwK7mg_Zs2ggSfjFmaUbhdZL_6dcToMiOIDSKyJtobUu0DfIrIVUvm_zX49x03ng0mBcVAH8aJzsPHCENw7A8c-QP6D1J6_qOWx_GUywZmHp1bYezelHHI_OOh1lFCNqsRNzAo7:
+#   - id: 107916769655878189479
+#   - email: nhlee105070075@gapp.nthu.edu.tw
+#   - verified_email: true
+#   - name: Nian-Hung Lee
+#   - given_name: Nian-Hung
+#   - family_name: Lee
+#   - picture: https://lh3.googleusercontent.com/a/AATXAJx0vcRZGy33qUw_Ba1E-1ZtWVyLaCKtgavig8pV=s96-c
+#   - locale: zh-TW
+#   - hd: gapp.nthu.edu.tw
 ---
-- ya29.a0ARrdaM-Sq2Dd3r_ByTcFNfwK7mg_Zs2ggSfjFmaUbhdZL_6dcToMiOIDSKyJtobUu0DfIrIVUvm_zX49x03ng0mBcVAH8aJzsPHCENw7A8c-QP6D1J6_qOWx_GUywZmHp1bYezelHHI_OOh1lFCNqsRNzAo7:
-  - id: 107916769655878189479
-  - email: nhlee105070075@gapp.nthu.edu.tw
-  - verified_email: true
-  - name: Nian-Hung Lee
-  - given_name: Nian-Hung
-  - family_name: Lee
-  - picture: https://lh3.googleusercontent.com/a/AATXAJx0vcRZGy33qUw_Ba1E-1ZtWVyLaCKtgavig8pV=s96-c
-  - locale: zh-TW
-  - hd: gapp.nthu.edu.tw
+token : {:"ya29.a0ARrdaM-Sq2Dd3r_ByTcFNfwK7mg_Zs2ggSfjFmaUbhdZL_6dcToMiOIDSKyJtobUu0DfIrIVUvm_zX49x03ng0mBcVAH8aJzsPHCENw7A8c-QP6D1J6_qOWx_GUywZmHp1bYezelHHI_OOh1lFCNqsRNzAo7"=>[{:id=>107916769655878189479}, {:email=>"nhlee105070075@gapp.nthu.edu.tw"}, {:verified_email=>true}, {:name=>"Nian-Hung Lee"}, {:given_name=>"Nian-Hung"}, {:family_name=>"Lee"}, {:picture=>"https://lh3.googleusercontent.com/a/AATXAJx0vcRZGy33qUw_Ba1E-1ZtWVyLaCKtgavig8pV=s96-c"}, {:locale=>"zh-TW"}, {:hd=>"gapp.nthu.edu.tw"}]}
+
+
