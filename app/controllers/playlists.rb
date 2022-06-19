@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './app'
+require 'pp'
 
 # rubocop:disable Metrics/BlockLength
 module WiseTube
@@ -16,7 +17,6 @@ module WiseTube
         # GET api/v1/playlists/[ID]
         routing.get do
           playlist = GetPlaylistQuery.call(auth: @auth, playlist: @req_playlist)
-
           { data: playlist }.to_json
         rescue GetPlaylistQuery::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
@@ -59,7 +59,6 @@ module WiseTube
               playlist: @req_playlist,
               collab_email: req_data['email']
             )
-
             { data: collaborator }.to_json
           rescue AddCollaborator::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
@@ -112,7 +111,7 @@ module WiseTube
           routing.halt 400, { message: 'Illegal Request' }.to_json
         rescue CreatePlaylistForOwner::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
-        rescue StandardError
+        rescue StandardError => e
           Api.logger.error "Unknown error: #{e.message}"
           routing.halt 500, { message: 'API server error' }.to_json
         end

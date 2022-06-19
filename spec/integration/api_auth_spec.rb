@@ -32,10 +32,9 @@ describe 'Test Authentication Routes' do
       _(account['id']).must_be_nil
     end
 
-    it 'BAD: should not authenticate invalid password' do
+    it 'BAD AUTHORIZATION: should not authenticate invalid password' do
       bad_credentials = { username: @account_data['username'],
                           password: 'fakepassword' }
-
       post 'api/v1/auth/authenticate',
            SignedRequest.new(app.config).sign(bad_credentials).to_json,
            @req_header
@@ -55,13 +54,18 @@ describe 'Test Authentication Routes' do
              .to_return(body: GH_ACCOUNT_RESPONSE[GOOD_GH_ACCESS_TOKEN],
                         status: 200,
                         headers: { 'content-type' => 'application/json' })
+
+      # WebMock.stub_request(:get, app.config.GOOGLE_ACCOUNT_URL)
+      #        .to_return(body: GOOGLE_ACCOUNT_RESPONSE[GOOD_GOOGLE_ACCESS_TOKEN],
+      #                   status: 200,
+      #                   headers: { 'content-type' => 'application/json' })
     end
 
     after do
       WebMock.disable!
     end
 
-    it 'HAPPY AUTH SSO: should authenticate+authorize new valid Github SSO account' do
+    it 'HAPPY AUTH Github SSO: should authenticate+authorize new valid Github SSO account' do
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
 
       post 'api/v1/auth/gh_sso',
@@ -77,13 +81,14 @@ describe 'Test Authentication Routes' do
       _(account['id']).must_be_nil
     end
 
-    it 'HAPPY AUTH SSO: should authorize existing Github SSO account' do
+    it 'HAPPY AUTH Github SSO: should authorize existing Github SSO account' do
       WiseTube::Account.create(
         username: GH_SSO_ACCOUNT['sso_username'],
         email: GH_SSO_ACCOUNT['email']
       )
 
       gh_access_token = { access_token: GOOD_GH_ACCESS_TOKEN }
+
       post 'api/v1/auth/gh_sso',
            SignedRequest.new(app.config).sign(gh_access_token).to_json,
            @req_header
@@ -97,10 +102,12 @@ describe 'Test Authentication Routes' do
       _(account['id']).must_be_nil
     end
 
-    # it 'HAPPY AUTH SSO: should authenticate+authorize new valid Google SSO account' do
+    # it 'HAPPY AUTH Google SSO: should authenticate+authorize new valid Google SSO account' do
     #   google_access_token = { access_token: GOOD_GOOGLE_ACCESS_TOKEN }
 
-    #   post 'api/v1/auth/google_sso', google_access_token.to_json, @req_header
+    #   post 'api/v1/auth/google_sso',
+    #        SignedRequest.new(app.config).sign(google_access_token).to_json,
+    #        @req_header
 
     #   auth_account = JSON.parse(last_response.body)['data']
     #   account = auth_account['attributes']['account']['attributes']
@@ -111,14 +118,17 @@ describe 'Test Authentication Routes' do
     #   _(account['id']).must_be_nil
     # end
 
-    # it 'HAPPY AUTH SSO: should authorize existing Google SSO account' do
+    # it 'HAPPY AUTH Github SSO: should authorize existing Github SSO account' do
     #   WiseTube::Account.create(
     #     username: GOOGLE_SSO_ACCOUNT['sso_username'],
     #     email: GOOGLE_SSO_ACCOUNT['email']
     #   )
 
     #   google_access_token = { access_token: GOOD_GOOGLE_ACCESS_TOKEN }
-    #   post 'api/v1/auth/google_sso', google_access_token.to_json, @req_header
+
+    #   post 'api/v1/auth/google_sso',
+    #        SignedRequest.new(app.config).sign(google_access_token).to_json,
+    #        @req_header
 
     #   auth_account = JSON.parse(last_response.body)['data']
     #   account = auth_account['attributes']['account']['attributes']

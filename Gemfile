@@ -27,6 +27,9 @@ end
 # External Services
 gem 'http'
 
+# Test coverage
+gem 'simplecov'
+
 # Testing
 group :test do
   gem 'minitest'
@@ -37,6 +40,9 @@ end
 # Debugging
 gem 'pry' # necessary for rake console
 gem 'rack-test'
+
+# Application
+gem 'google-apis-youtube_v3', '~>0.17.0'
 
 # Development
 group :development do

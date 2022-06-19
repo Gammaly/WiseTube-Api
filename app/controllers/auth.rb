@@ -35,6 +35,7 @@ module WiseTube
         # POST /api/v1/auth/authenticate
         routing.post do
           auth_account = AuthenticateAccount.call(@request_data)
+
           { data: auth_account }.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '

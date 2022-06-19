@@ -19,7 +19,7 @@ describe 'Test AddCollaboratorToPlaylist service' do
     _(account).wont_be_nil
   end
 
-  it 'SAD: will not authenticate with invalid password' do
+  it 'SAD Authentication: will not authenticate with invalid password' do
     credentials = DATA[:accounts].first
     _(proc {
       WiseTube::AuthenticateAccount.call(
@@ -28,7 +28,7 @@ describe 'Test AddCollaboratorToPlaylist service' do
     }).must_raise WiseTube::AuthenticateAccount::UnauthorizedError
   end
 
-  it 'BAD: will not authenticate with invalid credentials' do
+  it 'BAD Authentication: will not authenticate with invalid credentials' do
     _(proc {
       WiseTube::AuthenticateAccount.call(
         username: 'maluser', password: 'malword'

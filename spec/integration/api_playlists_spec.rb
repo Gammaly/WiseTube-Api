@@ -33,7 +33,7 @@ describe 'Test Playlist Handling' do
         _(result['data'].count).must_equal 2
       end
 
-      it 'BAD: should not process without authorization' do
+      it 'BAD AUTHORIZATION: should not process without authorization' do
         get 'api/v1/playlists'
         _(last_response.status).must_equal 403
 
@@ -105,7 +105,7 @@ describe 'Test Playlist Handling' do
       _(created['playlist_url']).must_equal @playlist_data['playlist_url']
     end
 
-    it 'SAD: should not create new playlist without authorization' do
+    it 'SAD AUTHORIZATION: should not create new playlist without authorization' do
       post 'api/v1/playlists', @playlist_data.to_json
 
       created = JSON.parse(last_response.body)['data']
@@ -115,7 +115,7 @@ describe 'Test Playlist Handling' do
       _(created).must_be_nil
     end
 
-    it 'SECURITY: should not create playlist with mass assignment' do
+    it 'SECURITY VULNERABILITY: should not create playlist with mass assignment' do
       bad_data = @playlist_data.clone
       bad_data['created_at'] = '1900-01-01'
 
