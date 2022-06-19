@@ -27,6 +27,9 @@ end
 # External Services
 gem 'http'
 
+# Test coverage
+gem 'simplecov'
+
 # Testing
 group :test do
   gem 'minitest'
