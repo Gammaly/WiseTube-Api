@@ -22,7 +22,7 @@ module WiseTube
             req_link: @req_link,
             note: req_body['note']
           )
-          puts "new: #{@req_link.note}"
+          puts "#{{ data: note }.to_json}"
           { data: note }.to_json
         rescue GetLinkQuery::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json

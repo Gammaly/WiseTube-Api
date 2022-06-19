@@ -66,7 +66,6 @@ module WiseTube
               playlist: @req_playlist,
               collab_email: req_data['email']
             )
-
             { data: collaborator }.to_json
           rescue AddCollaborator::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json

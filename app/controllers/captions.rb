@@ -15,7 +15,7 @@ module WiseTube
         q = routing.params['q']
         routing.get do
           data = GetCaptions.call(q:)
-
+          
           { data: }.to_json
         rescue GetCaptions::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
