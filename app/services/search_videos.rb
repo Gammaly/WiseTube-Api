@@ -18,7 +18,7 @@ module WiseTube
     end
 
     # Search Video
-    def self.call(input:)
+    def self.call(input)
       raise NotFoundError unless input
 
       Youtube::YoutubeApi.new.search_videos(input)
