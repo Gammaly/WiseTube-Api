@@ -29,10 +29,6 @@ module WiseTube
 
         routing.on('links') do
           # POST api/v1/playlists/[playlist_id]/links
-          puts JSON.parse(routing.body.read)
-          puts @req_playlist
-          puts @auth[:account] # @auth
-
           routing.post do
             new_link = CreateLink.call(
               auth: @auth,
@@ -42,8 +38,6 @@ module WiseTube
 
             response.status = 201
             response['Location'] = "#{@link_route}/#{new_link.id}"
-            mess = { message: 'Link saved', data: new_link }.to_json
-            puts mess
             { message: 'Link saved', data: new_link }.to_json
           rescue CreateLink::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
@@ -51,7 +45,6 @@ module WiseTube
             routing.halt 400, { message: e.message }.to_json
           rescue StandardError => e
             Api.logger.warn "Could not create link: #{e.message}"
-            puts "Could not create link: #{e.message}"
             routing.halt 500, { message: 'API server error' }.to_json
           end
         end

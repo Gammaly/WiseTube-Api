@@ -21,7 +21,6 @@ module WiseTube
       policy = PlaylistPolicy.new(auth[:account], playlist, auth[:scope])
       raise ForbiddenError unless policy.can_add_links?
 
-      puts 're========================'
       playlist.add_link(link_data)
     rescue Sequel::MassAssignmentRestriction
       raise IllegalRequestError
