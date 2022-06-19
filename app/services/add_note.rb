@@ -13,6 +13,7 @@ module WiseTube
     def self.call(auth:, req_link:, note:)
       policy = LinkPolicy.new(auth[:account], req_link, auth[:scope])
       raise ForbiddenError unless policy.can_edit?
+
       req_link.note = note
       req_link.save
     end
