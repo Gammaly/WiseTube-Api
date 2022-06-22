@@ -7,7 +7,7 @@ config/secrets.yml
 *.gem
 *.rbc
 /.config
-/coverage/
+# /coverage/
 /InstalledFiles
 /pkg/
 /spec/reports/
